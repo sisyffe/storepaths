@@ -11,7 +11,7 @@ target_include_directories(libcfgpath PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 target_sources(libcfgpath PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.macos.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.osx.c
 )
 
 # # Use Cocoa if apple
