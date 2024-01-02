@@ -19,7 +19,7 @@ std::string getConfigFolder(const std::string& appName) {
     }
 
     glob_t globbuf;
-    if (glob(buffer, GLOB_TILDE, NULL, &globbuf) != 0) {
+    if (glob(buffer, GLOB_TILDE, nullptr, &globbuf) != 0) {
         globfree(&globbuf);
         return "";
     }

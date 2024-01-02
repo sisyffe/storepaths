@@ -40,7 +40,7 @@ std::string getFile(const Files fileType, const std::string &appName) {
     }
 }
 
-LIBCFGPATH_IF_CPP()
+LIBCFGPATH_C_LINKAGE()
 
 CPP_FUNC_WRAPPER(getConfigFolder)
 CPP_FUNC_WRAPPER(getDataFolder)
@@ -50,6 +50,6 @@ CPP_FUNC_WRAPPER(getConfigFile)
 COMMON_CPP_FUNC_WRAPPER(Folders, getFolder)
 COMMON_CPP_FUNC_WRAPPER(Files, getFile)
 
-LIBCFGPATH_IF_CPP_END()
+LIBCFGPATH_C_LINKAGE_END()
 
 #undef CPP_FUNC_WRAPPER
