@@ -9,13 +9,13 @@
         std::memcpy(outBuffer, result.data(), result.size() + 1); \
     }
 
-LIBCFGPATH_CPP_CHECK()
+LIBCFGPATH_IF_CPP()
 
 CPP_FUNC_WRAPPER(getConfigFolder)
 CPP_FUNC_WRAPPER(getDataFolder)
 CPP_FUNC_WRAPPER(getCacheFolder)
 CPP_FUNC_WRAPPER(getConfigFile)
 
-LIBCFGPATH_CPP_CHECK_END()
+LIBCFGPATH_IF_CPP_END()
 
 #undef CPP_FUNC_WRAPPER

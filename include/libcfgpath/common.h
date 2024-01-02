@@ -3,13 +3,13 @@
 
 // Use extern "C" when compiled in C++
 #ifdef __cplusplus
-  #define LIBCFGPATH_CPP_CHECK() \
+  #define LIBCFGPATH_IF_CPP() \
     extern "C" {
-  #define LIBCFGPATH_CPP_CHECK_END() \
+  #define LIBCFGPATH_IF_CPP_END() \
     } // extern "C"
 #else
-  #define LIBCFGPATH_CPP_CHECK()
-  #define LIBCFGPATH_CPP_CHECK_END()
+  #define LIBCFGPATH_IF_CPP()
+  #define LIBCFGPATH_IF_CPP_END()
 #endif
 
 // Platform determination
@@ -57,7 +57,7 @@
   return;
 #define POSIX_MKDIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) // 0755
 
-LIBCFGPATH_CPP_CHECK()
+LIBCFGPATH_IF_CPP()
 
 enum Folders {
     CONFIG_FOLDER,
@@ -69,6 +69,6 @@ enum Files {
     CONFIG_FILE
 };
 
-LIBCFGPATH_CPP_CHECK_END()
+LIBCFGPATH_IF_CPP_END()
 
 #endif //LIBCFGPATH_COMMON_H_
