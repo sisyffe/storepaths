@@ -1,17 +1,18 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Standard
-set(CMAKE_C_STANDARD 23)
-set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Target
-project(libcfgpath C)
+project(libcfgpath)
 add_library(libcfgpath STATIC)
 target_include_directories(libcfgpath PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 target_sources(libcfgpath PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.osx.c
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.osx.cpp
 )
 
 # # Use Cocoa if apple
