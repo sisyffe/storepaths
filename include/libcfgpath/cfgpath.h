@@ -19,7 +19,7 @@ std::string getFolder(Folders folderType, const std::string& appName);
 std::string getFile(Files fileType, const std::string& appName);
 #endif
 
-LIBCFGPATH_CPP_CHECK()
+LIBCFGPATH_IF_CPP()
 
 void getConfigFolder(char* outBuffer, size_t maxLength, const char* appName);
 void getDataFolder(char* outBuffer, size_t maxLength, const char* appName);
@@ -29,6 +29,6 @@ void getConfigFile(char* outBuffer, size_t maxLength, const char* appName);
 void getFolder(enum Folders folderType, char* outBuffer, size_t maxLength, const char* appName);
 void getFile(enum Files fileType, char* outBuffer, size_t maxLength, const char* appName);
 
-LIBCFGPATH_CPP_CHECK_END()
+LIBCFGPATH_IF_CPP_END()
 
 #endif //LIBCFGPATH_CFGPATH_H_
