@@ -8,7 +8,7 @@
 #include <glob.h> /* Utility stuff (replace the tilde) */
 #include <sstream>
 
-std::string getConfigFolder(const std::string& appName) {
+static inline std::string getBaseFolder(const std::string& appName) {
     char buffer[MAX_PATH_LENGTH];
     const sysdir_search_path_enumeration_state state = sysdir_start_search_path_enumeration(
         SYSDIR_DIRECTORY_APPLICATION_SUPPORT,
@@ -30,28 +30,55 @@ std::string getConfigFolder(const std::string& appName) {
     result << globbuf.gl_pathv[0];
     result << PATH_SEP_CHAR;
     result << appName;
+    result << PATH_SEP_CHAR;
+
+    return result.str();
+}
+
+std::string getConfigFolder(const std::string& appName) {
+    std::ostringstream result;
+
+    // final copy
+    result << getBaseFolder(appName);
+    result << LIBCFGPATH_OSX_CONFIG_FOLDER;
     // Make the config folder if it doesn't already exist
-    mkdir(result.str().c_str(), POSIX_MKDIR_MODE);
+    mkdirParent(result.str().c_str(), MKDIR_MODE);
     result << PATH_SEP_CHAR;
 
     return result.str();
 }
 
 std::string getDataFolder(const std::string& appName) {
-    // Same implementation as getConfigFolder
-    return getConfigFolder(appName);
+    std::ostringstream result;
+
+    // final copy
+    result << getBaseFolder(appName);
+    result << LIBCFGPATH_OSX_DATA_FOLDER;
+    // Make the config folder if it doesn't already exist
+    mkdirParent(result.str().c_str(), MKDIR_MODE);
+    result << PATH_SEP_CHAR;
+
+    return result.str();
 }
 
 std::string getCacheFolder(const std::string& appName) {
-    // Same implementation as getConfigFolder
-    return getConfigFolder(appName);
+    std::ostringstream result;
+
+    // final copy
+    result << getBaseFolder(appName);
+    result << LIBCFGPATH_OSX_CACHE_FOLDER;
+    // Make the config folder if it doesn't already exist
+    mkdirParent(result.str().c_str(), MKDIR_MODE);
+    result << PATH_SEP_CHAR;
+
+    return result.str();
 }
 
 std::string getConfigFile(const std::string& appName) {
     std::ostringstream result;
-    result << getConfigFolder(appName); // Return a file in the config folder so need the config folder
+    result << getBaseFolder(appName);
     result << appName;
-    result << POSIX_CONFIG_EXTENSION;
+    result << CONFIG_EXTENSION;
 
     return result.str();
 }
