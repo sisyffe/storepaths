@@ -18,30 +18,42 @@ int crossMkdir(const char* path, const mode_t mode) {
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
     return mkdir(path, mode);
 #elif defined(LIBCFGPATH_OS_WINDOWS)
+    UNUSED(mode)
     return _mkdir(path);
 #endif
 }
 
+static inline void addToken(char* elements, const char* token, bool firstIter) {
+#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+    UNUSED(firstIter)
+    strcat(elements, PATH_SEP_STR);
+#elif defined(LIBCFGPATH_OS_WINDOWS)
+    if (!firstIter)
+        strcat(elements, PATH_SEP_STR);
+#endif
+    strcat(elements, token);
+}
+
 int mkdirParent(const char* path, const mode_t mode) {
     int returnCode = 0;
+    bool firstIter = true;
 
     // Setup strtok
     std::string pathCopy = path;
-    char* context;
+    char* context = nullptr;
     const auto elements = new char[pathCopy.size() + 1];
     strcpy(elements, ""); // Empty string
 
     const char* token = strtok_r(pathCopy.data(), PATH_SEP_STR, &context);
     while (token != nullptr) {
-        strcat(elements, PATH_SEP_STR);
-        strcat(elements, token);
+        addToken(elements, token, firstIter);
         token = strtok_r(nullptr, PATH_SEP_STR, &context);
 
         if (canAccessFolder(elements) != 0) {
-            if ((returnCode = crossMkdir(elements, mode)) != 0) {
+            if ((returnCode = crossMkdir(elements, mode)) != 0)
                 return returnCode;
-            }
         }
+        firstIter = false;
     }
 
     delete[] elements;

@@ -18,8 +18,8 @@
   #include <sys/stat.h> // mkdir
 #elif defined(LIBCFGPATH_OS_WINDOWS)
   #include <windows.h> // MAX_PATH
-  #include <direct.h> // idk
-  #include <io.h> // _mkdir and _access
+  #include <direct.h> // _mkdir
+  #include <io.h> // _access
 #elif defined(LIBCFGPATH_OS_OSX)
   #include <unistd.h> // access
   #include <sys/stat.h> // mkdir
@@ -34,6 +34,7 @@
 
   #define CONFIG_EXTENSION ".conf"
   #define MKDIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) // 0755
+
 #elif defined(LIBCFGPATH_OS_WINDOWS)
   #define PATH_SEP_CHAR '\\'
   #define PATH_SEP_STR "\\"
@@ -41,9 +42,13 @@
 
   #define CONFIG_EXTENSION ".ini"
   #define MKDIR_MODE 0 // No mkdir mode on windows
+
   #define mkdir(path, mode) _mkdir(path)
+  #define strtok_r strtok_s
   #define mode_t unsigned short
-  // #define inline __inline // disabled
+
+  #define LIBCFGPATH_WINDOWS_CONFIG_FOLDER "configuration"
+  #define LIBCFGPATH_WINDOWS_DATA_FOLDER "data"
 #elif defined(LIBCFGPATH_OS_OSX)
   #define PATH_SEP_CHAR '/'
   #define PATH_SEP_STR "/"
@@ -52,7 +57,7 @@
   #define CONFIG_EXTENSION ".conf"
   #define MKDIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) // 0755
 
-  #define LIBCFGPATH_OSX_CONFIG_FOLDER "config"
+  #define LIBCFGPATH_OSX_CONFIG_FOLDER "configuration"
   #define LIBCFGPATH_OSX_DATA_FOLDER "data"
   #define LIBCFGPATH_OSX_CACHE_FOLDER "cache"
 #endif
@@ -72,6 +77,10 @@
   outBuffer[0] = '\0'; \
   return;
 
+#ifndef UNUSED
+#define UNUSED(x) (void)x;
+#endif
+
 LIBCFGPATH_C_LINKAGE()
 
 enum Folders {
@@ -87,7 +96,13 @@ enum Files {
 int canAccessFolder(const char* path);
 int crossMkdir(const char* path, mode_t mode);
 
+// MSCV bugs with default parameters
+#if defined(_MSC_VER) && defined(LIBCFGPATH_OS_WINDOWS)
 int mkdirParent(const char* path, mode_t mode);
+static inline int mkdirParentNoMode(const char* path) { return mkdirParent(path, MKDIR_MODE); }
+#else
+int mkdirParent(const char* path, mode_t mode = MKDIR_MODE);
+#endif
 
 LIBCFGPATH_C_LINKAGE_END()
 
