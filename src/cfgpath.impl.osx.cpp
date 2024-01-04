@@ -42,7 +42,7 @@ static inline bool getBaseFolder(std::ostringstream& stream, const std::string& 
 		return result.str(); \
 	}
 
-GET_FILE_FOLDER_FUNCTION(getConfigFolder, getBaseFolder(result, appName), LIBCFGPATH_OSX_CONFIG_FOLDER << PATH_SEP_CHAR)
+//GET_FILE_FOLDER_FUNCTION(getConfigFolder, getBaseFolder(result, appName), LIBCFGPATH_OSX_CONFIG_FOLDER << PATH_SEP_CHAR)
 
 std::string getConfigFolder(const std::string& appName) {
     std::ostringstream result;
@@ -51,7 +51,7 @@ std::string getConfigFolder(const std::string& appName) {
         return "";
 
     result << LIBCFGPATH_OSX_CONFIG_FOLDER << PATH_SEP_CHAR;
-    mkdirParent(result.str().c_str()); // Create this folder if it doesnt already exists
+    mkdirParent(result.str().c_str(), MKDIR_MODE); // Create this folder if it doesnt already exists
 
     return result.str();
 }
@@ -63,7 +63,7 @@ std::string getDataFolder(const std::string& appName) {
         return "";
 
     result << LIBCFGPATH_OSX_DATA_FOLDER << PATH_SEP_CHAR;
-    mkdirParent(result.str().c_str()); // Create this folder if it doesnt already exists
+    mkdirParent(result.str().c_str(), MKDIR_MODE); // Create this folder if it doesnt already exists
 
     return result.str();
 }
@@ -75,7 +75,7 @@ std::string getCacheFolder(const std::string& appName) {
         return "";
 
     result << LIBCFGPATH_OSX_CACHE_FOLDER << PATH_SEP_CHAR;
-    mkdirParent(result.str().c_str()); // Create this folder if it doesnt already exists
+    mkdirParent(result.str().c_str(), MKDIR_MODE); // Create this folder if it doesnt already exists
 
     return result.str();
 }
@@ -86,7 +86,7 @@ std::string getConfigFile(const std::string& appName) {
     if (!getBaseFolder(result, appName))
         return "";
 
-    mkdirParent(result.str().c_str()); // Create this folder if it doesnt already exists
+    mkdirParent(result.str().c_str(), MKDIR_MODE); // Create this folder if it doesnt already exists
 
     result << appName << CONFIG_EXTENSION;
 

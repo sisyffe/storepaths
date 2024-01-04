@@ -1,6 +1,8 @@
 #ifndef LIBCFGPATH_COMMON_H_
 #define LIBCFGPATH_COMMON_H_
 
+// # Marcos and includes
+
 // Platform determination
 #if defined(__linux__) || defined(BSD)
   #define LIBCFGPATH_OS_LINUX
@@ -76,10 +78,11 @@
 #define LIBCFGPATH_ERROR_RETURN(outBuffer) \
   outBuffer[0] = '\0'; \
   return;
-
 #ifndef UNUSED
-#define UNUSED(x) (void)x;
+  #define UNUSED(x) (void)x;
 #endif
+
+// # Common stuff
 
 LIBCFGPATH_C_LINKAGE()
 
@@ -93,16 +96,10 @@ enum Files {
     CONFIG_FILE
 };
 
+// ## System functions
 int canAccessFolder(const char* path);
 int crossMkdir(const char* path, mode_t mode);
-
-// MSCV bugs with default parameters
-#if defined(_MSC_VER) && defined(LIBCFGPATH_OS_WINDOWS)
 int mkdirParent(const char* path, mode_t mode);
-static inline int mkdirParentNoMode(const char* path) { return mkdirParent(path, MKDIR_MODE); }
-#else
-int mkdirParent(const char* path, mode_t mode = MKDIR_MODE);
-#endif
 
 LIBCFGPATH_C_LINKAGE_END()
 

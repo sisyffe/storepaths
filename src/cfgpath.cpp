@@ -40,6 +40,7 @@ std::string getFile(const Files fileType, const std::string &appName) {
     }
 }
 
+// # Proxy for C
 LIBCFGPATH_C_LINKAGE()
 
 CPP_FUNC_WRAPPER(getConfigFolder)

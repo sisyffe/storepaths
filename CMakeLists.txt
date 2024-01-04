@@ -32,4 +32,6 @@ elseif(UNIX)
             -Wextra
             -Werror
     )
+else()
+    message(SEND_ERROR "Unknown platform")
 endif()

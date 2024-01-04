@@ -33,8 +33,11 @@ static inline std::string toString(const PWSTR& inString) {
 static inline bool getFolder(std::ostringstream& stream, const KNOWNFOLDERID& id, const std::string& appName) {
 	// This function does not create the folder it returns
 
+	if (!initializer.initialized())
+		return false;
+
 	PWSTR path = nullptr;
-	HRESULT hr = SHGetKnownFolderPath(
+	HRESULT hr = SHGetKnownFolderPath( // API function
 		id, // Caller defines it
 		KF_FLAG_DEFAULT, // No flags (=0)
 		NULL, // Current user
@@ -59,7 +62,7 @@ static inline bool getFolder(std::ostringstream& stream, const KNOWNFOLDERID& id
             return ""; \
         \
         result << custom; \
-        mkdirParentNoMode(result.str().c_str()); \
+        mkdirParent(result.str().c_str(), MKDIR_MODE); \
 		\
 		return result.str(); \
 	}
