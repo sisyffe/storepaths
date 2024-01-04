@@ -14,22 +14,22 @@ target_sources(libcfgpath PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/common.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.osx.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.windows.cpp
 )
-
-# # Use Cocoa if apple
-# if (APPLE)
-#     find_library(COCOA Cocoa)
-#     if (NOT COCOA)
-#         message(FATAL_ERROR "Cocoa not found")
-#     endif()
-#     target_link_libraries(libgrades PRIVATE ${COCOA})
-# endif()
 
 # Compile options
-target_compile_options(libcfgpath
-        PUBLIC
-        -Wall
-        -Wpedantic
-        -Wextra
-        -Werror
-)
+if(CYGWIN)
+    target_compile_options(libcfgpath
+            PUBLIC
+            /Wall
+            /WX
+    )
+elseif(UNIX)
+    target_compile_options(libcfgpath
+            PUBLIC
+            -Wall
+            -Wpedantic
+            -Wextra
+            -Werror
+    )
+endif()

@@ -1,8 +1,6 @@
 #include "libcfgpath/cfgpath.h"
 
-#ifndef LIBCFGPATH_OS_OSX
-#warning "You are building the osx implementation in a not apple environnement"
-#endif
+#ifdef LIBCFGPATH_OS_OSX
 
 #include <sysdir.h> /* Apple API */
 #include <glob.h> /* Utility stuff (replace the tilde) */
@@ -82,3 +80,5 @@ std::string getConfigFile(const std::string& appName) {
 
     return result.str();
 }
+
+#endif //LIBCFGPATH_OS_OSX
