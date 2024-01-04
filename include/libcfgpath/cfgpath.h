@@ -7,6 +7,7 @@
 
 #include "libcfgpath/common.h"
 
+// # Actual implementation
 #ifdef __cplusplus
 std::string getConfigFolder(const std::string& appName);
 std::string getDataFolder(const std::string& appName);
@@ -17,6 +18,7 @@ std::string getFolder(Folders folderType, const std::string& appName);
 std::string getFile(Files fileType, const std::string& appName);
 #endif
 
+// # Proxy for C of the above functions
 LIBCFGPATH_C_LINKAGE()
 
 void getConfigFolder(char* outBuffer, size_t maxLength, const char* appName);

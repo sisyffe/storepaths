@@ -18,7 +18,7 @@ target_sources(libcfgpath PRIVATE
 )
 
 # Compile options
-if(CYGWIN)
+if(WIN32)
     target_compile_options(libcfgpath
             PUBLIC
             /Wall
@@ -32,4 +32,6 @@ elseif(UNIX)
             -Wextra
             -Werror
     )
+else()
+    message(SEND_ERROR "Unknown platform")
 endif()

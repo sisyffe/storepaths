@@ -44,15 +44,18 @@ int mkdirParent(const char* path, const mode_t mode) {
     const auto elements = new char[pathCopy.size() + 1];
     strcpy(elements, ""); // Empty string
 
+    // Checks if each folder of the pat hexists
     const char* token = strtok_r(pathCopy.data(), PATH_SEP_STR, &context);
     while (token != nullptr) {
         addToken(elements, token, firstIter);
         token = strtok_r(nullptr, PATH_SEP_STR, &context);
 
+        // Create folder if it does not exists
         if (canAccessFolder(elements) != 0) {
             if ((returnCode = crossMkdir(elements, mode)) != 0)
                 return returnCode;
         }
+
         firstIter = false;
     }
 
