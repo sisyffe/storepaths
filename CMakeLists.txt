@@ -10,11 +10,22 @@ add_library(libcfgpath STATIC)
 target_include_directories(libcfgpath PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
+
+# Choose implementation file
+if(WIN32)
+    set(IMPLEMENTATION_FILE "cfgpath.impl.windows.cpp")
+elseif(APPLE)
+    set(IMPLEMENTATION_FILE "cfgpath.impl.osx.cpp")
+elseif(UNIX)
+    set(IMPLEMENTATION_FILE "cfgpath.impl.linux.cpp")
+else()
+    message(SEND_ERROR "Unknown platform")
+endif()
+
 target_sources(libcfgpath PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/common.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.osx.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.windows.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/${IMPLEMENTATION_FILE}
 )
 
 # Compile options

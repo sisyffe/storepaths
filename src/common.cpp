@@ -2,6 +2,14 @@
 
 #include <string>
 
+#include "libcfgpath/sizedstream.hpp"
+
+using namespace libcfgpath;
+
+#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#  include <unistd.h> // access
+#endif
+
 LIBCFGPATH_C_LINKAGE()
 
 int canAccessFolder(const char* path) {
@@ -23,15 +31,15 @@ int crossMkdir(const char* path, const mode_t mode) {
 #endif
 }
 
-static inline void addToken(char* elements, const char* token, bool firstIter) {
+static inline void addToken(SizedStream& elements, const char* token, bool firstIter) {
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
     UNUSED(firstIter)
-    strcat(elements, PATH_SEP_STR);
+    elements << PATH_SEP_CHAR;
 #elif defined(LIBCFGPATH_OS_WINDOWS)
     if (!firstIter)
-        strcat(elements, PATH_SEP_STR);
+        elements << PATH_SEP_CHAR;
 #endif
-    strcat(elements, token);
+    elements << token;
 }
 
 int mkdirParent(const char* path, const mode_t mode) {
@@ -41,8 +49,7 @@ int mkdirParent(const char* path, const mode_t mode) {
     // Setup strtok
     std::string pathCopy = path;
     char* context = nullptr;
-    const auto elements = new char[pathCopy.size() + 1];
-    strcpy(elements, ""); // Empty string
+    SizedStream elements{ pathCopy.size() + 1 };
 
     // Checks if each folder of the pat hexists
     const char* token = strtok_r(pathCopy.data(), PATH_SEP_STR, &context);
@@ -51,15 +58,14 @@ int mkdirParent(const char* path, const mode_t mode) {
         token = strtok_r(nullptr, PATH_SEP_STR, &context);
 
         // Create folder if it does not exists
-        if (canAccessFolder(elements) != 0) {
-            if ((returnCode = crossMkdir(elements, mode)) != 0)
+        if (canAccessFolder(elements.readBuffer()) != 0) {
+            if ((returnCode = crossMkdir(elements.readBuffer(), mode)) != 0)
                 return returnCode;
         }
 
         firstIter = false;
     }
 
-    delete[] elements;
     return returnCode;
 }
 
