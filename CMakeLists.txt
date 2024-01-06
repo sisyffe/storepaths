@@ -29,13 +29,7 @@ target_sources(libcfgpath PRIVATE
 )
 
 # Compile options
-if(WIN32)
-    target_compile_options(libcfgpath
-            PUBLIC
-            /Wall
-            /WX
-    )
-elseif(UNIX)
+if(UNIX)
     target_compile_options(libcfgpath
             PUBLIC
             -Wall
@@ -43,4 +37,6 @@ elseif(UNIX)
             -Wextra
             -Werror
     )
+# Windows raises lots of unnecessary warnings if compiled with /Wall
+# so default compilation
 endif()

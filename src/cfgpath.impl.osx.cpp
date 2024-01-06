@@ -7,7 +7,7 @@
 #include <sysdir.h> /* Apple API */
 #include <glob.h> /* Utility stuff (replace the tilde) */
 
-#define LIBCFGPATH_INCLUDE_IMPLEMENTATION
+#define LIBCFGPATH_CAN_INCLUDE_IMPLEMENTATION_HPP
 #include "libcfgpath/implementations.hpp"
 #include "libcfgpath/sizedstream.hpp"
 

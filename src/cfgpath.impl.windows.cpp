@@ -5,9 +5,9 @@
 #endif
 
 #include <ShlObj.h> // SHGetKnownFolderPath
-#include <codecvt> // convert wide strings
+#include <optional>
 
-#define LIBCFGPATH_INCLUDE_IMPLEMENTATION
+#define LIBCFGPATH_CAN_INCLUDE_IMPLEMENTATION_HPP
 #include "libcfgpath/implementations.hpp"
 #include "libcfgpath/sizedstream.hpp"
 
@@ -29,10 +29,41 @@ namespace libcfgpath {
 
 	static COMInitializer initializer;
 
-	static inline std::string toStringfromWide(const PWSTR& inString) {
-		using convertType = std::codecvt_utf8<WCHAR>;
-		static std::wstring_convert<convertType, WCHAR> converter;
-		return converter.to_bytes(inString);
+	static inline std::optional<std::string> toStringfromWide(const std::wstring& inString) {
+		// Get the required buffer size for the multi-byte string
+		BOOL usedDefaultChar = false;
+		int bufferSize = WideCharToMultiByte(
+			CP_ACP, // Default code page
+			0, // No flags
+			inString.c_str(), // String to convert
+			-1, // -1 for null-terminated strings
+			nullptr, // No target string
+			0, // Size of the target string
+			nullptr, // No special charatcer for replacement
+			&usedDefaultChar // Know if the function used a default character
+		);
+
+		if (!bufferSize || usedDefaultChar)
+			return std::nullopt;
+
+		std::string multiByteStr(bufferSize - 1, '\0');
+
+		// Perform the actual conversion
+		int result = WideCharToMultiByte(
+			CP_ACP, // Same codepage as above
+			0, // No flags
+			inString.c_str(), // Source
+			-1, // The string is null-terminated
+			multiByteStr.data(), // Target
+			bufferSize, // String size
+			nullptr, // No spcial character
+			&usedDefaultChar // Know if the function used a default character
+		);
+
+		if (!result || usedDefaultChar)
+			return std::nullopt;
+
+		return multiByteStr;
 	}
 
 	static inline bool getFolder(SizedStream& stream, const KNOWNFOLDERID& id, const std::string& appName) {
@@ -54,7 +85,14 @@ namespace libcfgpath {
 			return false;
 		}
 
-		stream << toStringfromWide(path) << PATH_SEP_CHAR;
+		auto convertedString = toStringfromWide(path);
+
+		if (!convertedString.has_value()) {
+			CoTaskMemFree(path);
+			return false;
+		}
+
+		stream << convertedString.value() << PATH_SEP_CHAR;
 		CoTaskMemFree(path);
 		return true;
 	}

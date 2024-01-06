@@ -8,7 +8,7 @@ namespace libcfgpath {
         static inline double expandIncrement = 1.25;
 
         char* buffer;
-        char* currentPos;
+        char* currentPos; // This Should always points to a '\0' character
         size_t reservedSize;
 
         [[nodiscard]] inline bool canHold(const size_t additionnalSize) const {
@@ -34,7 +34,7 @@ namespace libcfgpath {
     public:
         explicit inline SizedStream(const size_t size)
         : buffer(static_cast<char*>(malloc(size))), currentPos(buffer), reservedSize(size) {
-            strncpy(buffer, "\0", 1);
+            buffer[0] = '\0';
         }
 
         inline ~SizedStream() {
@@ -44,7 +44,7 @@ namespace libcfgpath {
         inline SizedStream& operator<<(const std::string& string) {
             const size_t stringSize = string.size();
             resizeIfNeeded(stringSize);
-            strncpy(currentPos, string.c_str(), remainingSize());
+            strcpy(currentPos, string.c_str());
             currentPos += stringSize; // No +1
             return *this;
         }
@@ -52,7 +52,7 @@ namespace libcfgpath {
         inline SizedStream& operator<<(const char* string) {
             const size_t stringSize = strlen(string);
             resizeIfNeeded(stringSize);
-            strncpy(currentPos, string, remainingSize());
+            strcpy(currentPos, string);
             currentPos += stringSize; // No +1
             return *this;
         }
@@ -60,6 +60,7 @@ namespace libcfgpath {
         inline SizedStream& operator<<(const char character) {
             resizeIfNeeded(sizeof(character));
             *currentPos++ = character;
+            *currentPos = '\0';
             return *this;
         }
 
@@ -74,7 +75,7 @@ namespace libcfgpath {
         inline void shrinkToFit() {
             reservedSize = strlen(buffer);
             const auto newBuffer = static_cast<char*>(malloc(reservedSize));
-            strncpy(newBuffer, buffer, reservedSize);
+            strcpy(newBuffer, buffer);
             buffer = newBuffer;
             reset();
         }
