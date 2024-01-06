@@ -15,7 +15,6 @@
 
 // ## Includes depending on the platform
 #if defined(LIBCFGPATH_OS_LINUX)
-#  include <unistd.h> // access
 #  include <sys/stat.h> // mkdir
 #elif defined(LIBCFGPATH_OS_WINDOWS)
 #  include <windows.h> // MAX_PATH
@@ -34,6 +33,10 @@
 
 #  define CONFIG_EXTENSION ".conf"
 #  define MKDIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) // 0755
+
+#  define LIBCFGPATH_LINUX_DEFAULT_CONFIG_FOLDER "$HOME/.config"
+#  define LIBCFGPATH_LINUX_DEFAULT_DATA_FOLDER "$HOME/.local/share"
+#  define LIBCFGPATH_LINUX_DEFAULT_CACHE_FOLDER "$HOME/.cache"
 #elif defined(LIBCFGPATH_OS_WINDOWS)
 #  define PATH_SEP_CHAR '\\'
 #  define PATH_SEP_STR "\\"
@@ -46,7 +49,7 @@
 #  define strtok_r strtok_s
 #  define mode_t unsigned short
 
-#   define LIBCFGPATH_WINDOWS_CONFIG_FOLDER "configuration"
+#  define LIBCFGPATH_WINDOWS_CONFIG_FOLDER "configuration"
 #  define LIBCFGPATH_WINDOWS_DATA_FOLDER "data"
 #elif defined(LIBCFGPATH_OS_OSX)
 #  define PATH_SEP_CHAR '/'

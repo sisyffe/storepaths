@@ -41,18 +41,18 @@ namespace libcfgpath {
             free(buffer);
         }
 
-        inline SizedStream& operator<<(const std::string& string) {
-            const size_t stringSize = string.size();
-            resizeIfNeeded(stringSize);
-            strcpy(currentPos, string.c_str());
-            currentPos += stringSize; // No +1
-            return *this;
-        }
-
         inline SizedStream& operator<<(const char* string) {
             const size_t stringSize = strlen(string);
             resizeIfNeeded(stringSize);
             strcpy(currentPos, string);
+            currentPos += stringSize; // No +1
+            return *this;
+        }
+
+        inline SizedStream& operator<<(const std::string& string) {
+            const size_t stringSize = string.size();
+            resizeIfNeeded(stringSize);
+            strcpy(currentPos, string.c_str());
             currentPos += stringSize; // No +1
             return *this;
         }

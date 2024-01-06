@@ -6,16 +6,17 @@
 #endif
 
 #define DEFINE_GET_FOLDER_FUNCTION(funcName, funcCalled, custom) \
-    std::string funcName(const std::string& appName) { \
+    std::pair<std::string, bool> funcName(const std::string& appName) { \
         SizedStream result{ MAX_PATH_LENGTH }; \
         \
         if (!funcCalled) \
-            return ""; \
+            return { "", false } ; \
         \
         result << custom; \
-        mkdirParent(result.readBuffer(), MKDIR_MODE); \
+        if (mkdirParent(result.readBuffer(), MKDIR_MODE) != 0) \
+            return { result.toString(), false }; \
         \
-        return result.toString(); \
+        return { result.toString(), true } ; \
     }
 
 // The difference is that there is no mkdir for this
@@ -24,11 +25,11 @@
         SizedStream result{ MAX_PATH_LENGTH }; \
         \
         if (!funcCalled) \
-            return ""; \
+            return "" ; \
         \
         result << custom; \
         \
-        return result.toString(); \
+        return result.toString() ; \
     }
 
 #endif //LIBGRADES_IMPLEMENTATIONS_HPP_

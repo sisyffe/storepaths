@@ -66,7 +66,7 @@ namespace libcfgpath {
 		return multiByteStr;
 	}
 
-	static inline bool getFolder(SizedStream& stream, const KNOWNFOLDERID& id, const std::string& appName) {
+	static inline bool getSpecificFolder(SizedStream& stream, const KNOWNFOLDERID& id, const std::string& appName) {
 		// This function does not create the folder it returns
 
 		if (!initializer.initialized())
@@ -99,25 +99,25 @@ namespace libcfgpath {
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getConfigFolder,
-		getFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
+		getSpecificFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
 		appName << PATH_SEP_CHAR << LIBCFGPATH_WINDOWS_CONFIG_FOLDER << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getDataFolder,
-		getFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
+		getSpecificFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
 		appName << PATH_SEP_CHAR << LIBCFGPATH_WINDOWS_DATA_FOLDER << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getCacheFolder,
-		getFolder(result, FOLDERID_LocalAppData, appName), // AppData\Local
+		getSpecificFolder(result, FOLDERID_LocalAppData, appName), // AppData\Local
 		appName << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FILE_FUNCTION(
 		getConfigFile,
-		getFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
+		getSpecificFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
 		appName << CONFIG_EXTENSION
 	)
 }

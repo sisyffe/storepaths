@@ -3,17 +3,21 @@
 
 #include "libcfgpath/common.h"
 
+#ifndef __cplusplus
+#  include <stdbool.h>
+#endif
+
 // # Actual implementation
 #ifdef __cplusplus
 #include <string>
 
 namespace libcfgpath {
-    std::string getConfigFolder(const std::string& appName);
-    std::string getDataFolder(const std::string& appName);
-    std::string getCacheFolder(const std::string& appName);
+    std::pair<std::string, bool> getConfigFolder(const std::string& appName);
+    std::pair<std::string, bool> getDataFolder(const std::string& appName);
+    std::pair<std::string, bool> getCacheFolder(const std::string& appName);
     std::string getConfigFile(const std::string& appName);
 
-    std::string getFolder(Folders folderType, const std::string& appName);
+    std::pair<std::string, bool> getFolder(Folders folderType, const std::string& appName);
     std::string getFile(Files fileType, const std::string& appName);
 } // libcfgpath
 #endif
@@ -21,9 +25,9 @@ namespace libcfgpath {
 // # Proxy for C of the above functions
 LIBCFGPATH_C_LINKAGE()
 
-void getConfigFolder(char* outBuffer, size_t maxLength, const char* appName);
-void getDataFolder(char* outBuffer, size_t maxLength, const char* appName);
-void getCacheFolder(char* outBuffer, size_t maxLength, const char* appName);
+bool getConfigFolder(char* outBuffer, size_t maxLength, const char* appName);
+bool getDataFolder(char* outBuffer, size_t maxLength, const char* appName);
+bool getCacheFolder(char* outBuffer, size_t maxLength, const char* appName);
 void getConfigFile(char* outBuffer, size_t maxLength, const char* appName);
 
 LIBCFGPATH_C_LINKAGE_END()
