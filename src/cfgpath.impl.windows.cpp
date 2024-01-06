@@ -5,8 +5,11 @@
 #endif
 
 #include <ShlObj.h> // SHGetKnownFolderPath
-
 #include <codecvt> // convert wide strings
+
+#define LIBCFGPATH_INCLUDE_IMPLEMENTATION
+#include "libcfgpath/implementations.hpp"
+#include "libcfgpath/sizedstream.hpp"
 
 namespace libcfgpath {
 	struct COMInitializer {
