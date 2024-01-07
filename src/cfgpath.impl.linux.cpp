@@ -10,7 +10,7 @@
 #include "libcfgpath/implementations.hpp"
 #include "libcfgpath/sizedstream.hpp"
 
-namespace libcfgpath::linux {
+namespace libcfgpath::posix {
     enum PathType { HOME, SPECIFIC };
 
     static inline std::string expand(const char* string) {
@@ -62,25 +62,25 @@ namespace libcfgpath::linux {
 
     DEFINE_GET_FOLDER_FUNCTION(
         getConfigFolder,
-        getSpecificFolder(result, appName, "XDG_CONFIG_HOME", LIBCFGPATH_LINUX_DEFAULT_CONFIG_FOLDER),
+        getSpecificFolder(result, appName, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
         ""
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getDataFolder,
-        getSpecificFolder(result, appName, "XDG_DATA_HOME", LIBCFGPATH_LINUX_DEFAULT_DATA_FOLDER),
+        getSpecificFolder(result, appName, "XDG_DATA_HOME", LIBCFGPATH_POSIX_DEFAULT_DATA_FOLDER),
         ""
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getCacheFolder,
-        getSpecificFolder(result, appName, "XDG_CACHE_HOME", LIBCFGPATH_LINUX_DEFAULT_CACHE_FOLDER),
+        getSpecificFolder(result, appName, "XDG_CACHE_HOME", LIBCFGPATH_POSIX_DEFAULT_CACHE_FOLDER),
         ""
     )
 
     DEFINE_GET_FILE_FUNCTION(
         getConfigFile,
-        getSpecificFolder(result, appName, "XDG_CONFIG_HOME", LIBCFGPATH_LINUX_DEFAULT_CONFIG_FOLDER),
+        getSpecificFolder(result, appName, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
         appName << CONFIG_EXTENSION
     )
 } // libcfgpath

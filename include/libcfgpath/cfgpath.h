@@ -19,7 +19,7 @@
 
 namespace libcfgpath {
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
-    namespace linux {
+    namespace posix {
         DECLARE_CPP_FUNCS
     } // linux
 #endif
@@ -40,7 +40,7 @@ namespace libcfgpath {
 // ## Using namespaces for current platform
 namespace libcfgpath {
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_USING_LINUX_IMPL_FOR_OSX)
-    using namespace linux;
+    using namespace posix;
 #elif defined(LIBCFGPATH_OS_WINDOWS)
     using namespace windows;
 #elif defined(LIBCFGPATH_OS_OSX) && !defined(LIBCFGPATH_USING_LINUX_IMPL_FOR_OSX)
@@ -61,7 +61,7 @@ namespace libcfgpath {
     void confFileName(char* outBuffer, size_t maxLength, const char* appName);
 
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
-    DECLARE_C_FUNCS(getLinuxConfigFolder, getLinuxDataFolder, getLinuxCacheFolder, getLinuxConfigFile)
+    DECLARE_C_FUNCS(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixConfigFile)
 #endif
 #if defined(LIBCFGPATH_OS_WINDOWS)
     DECLARE_C_FUNCS(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsConfigFile)
@@ -88,7 +88,7 @@ namespace libcfgpath {
     }
 
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_USING_LINUX_IMPL_FOR_OSX)
-    DEFINE_C_ALIASES(getLinuxConfigFolder, getLinuxDataFolder, getLinuxCacheFolder, getLinuxConfigFile)
+    DEFINE_C_ALIASES(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixConfigFile)
 #elif defined(LIBCFGPATH_OS_WINDOWS)
     DEFINE_C_ALIASES(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsConfigFile)
 #elif defined(LIBCFGPATH_OS_OSX) && !defined(LIBCFGPATH_USING_LINUX_IMPL_FOR_OSX)

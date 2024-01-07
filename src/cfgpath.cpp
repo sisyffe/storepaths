@@ -74,7 +74,7 @@ LIBCFGPATH_C_LINKAGE()
     CPP_FILE_FUNC_WRAPPER(aliasConfFileName, libcfgpath::nameSpace::getConfigFile)
 
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
-    DEFINE_C_WRAPPERS(linux, getLinuxConfigFolder, getLinuxDataFolder, getLinuxCacheFolder, getLinuxConfigFile)
+    DEFINE_C_WRAPPERS(posix, getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixConfigFile)
 #endif
 #if defined(LIBCFGPATH_OS_WINDOWS)
     DEFINE_C_WRAPPERS(windows, getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsConfigFile)

@@ -1,6 +1,7 @@
 #ifndef LIBCFGPATH_SIZEDSTREAM_H_
 #define LIBCFGPATH_SIZEDSTREAM_H_
 
+#include <cstring>
 #include <string>
 
 namespace libcfgpath {
