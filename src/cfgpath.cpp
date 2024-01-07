@@ -1,5 +1,7 @@
 #include "libcfgpath/cfgpath.h"
 
+#include <cstring>
+
 // # Define C++ common funcs
 #define DEFINE_GET_FILE_FOLDER_FUNCS \
     std::pair<std::string, bool> getFolder(const Folders folderType, const std::string& appName) { \
@@ -26,7 +28,7 @@
 
 namespace libcfgpath {
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
-    namespace linux {
+    namespace posix {
         DEFINE_GET_FILE_FOLDER_FUNCS
     } // linux
 #endif
