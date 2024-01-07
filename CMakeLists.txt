@@ -11,13 +11,16 @@ target_include_directories(libcfgpath PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Choose implementation file
+# Choose implementation file(s)
 if(WIN32)
-    set(IMPLEMENTATION_FILE "cfgpath.impl.windows.cpp")
+    set(IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.windows.cpp")
+    set(SECOND_IMPLEMENTATION_FILE "")
 elseif(APPLE)
-    set(IMPLEMENTATION_FILE "cfgpath.impl.osx.cpp")
+    set(IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.osx.cpp")
+    set(SECOND_IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.linux.cpp")
 elseif(UNIX)
-    set(IMPLEMENTATION_FILE "cfgpath.impl.linux.cpp")
+    set(IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.impl.linux.cpp")
+    set(SECOND_IMPLEMENTATION_FILE "")
 else()
     message(SEND_ERROR "Unknown platform")
 endif()
@@ -25,7 +28,8 @@ endif()
 target_sources(libcfgpath PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/common.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.cpp
-        ${CMAKE_CURRENT_SOURCE_DIR}/src/${IMPLEMENTATION_FILE}
+        ${IMPLEMENTATION_FILE}
+        ${SECOND_IMPLEMENTATION_FILE}
 )
 
 # Compile options

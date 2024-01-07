@@ -2,7 +2,7 @@
 
 #include <wordexp.h>
 
-#ifndef LIBCFGPATH_OS_LINUX
+#if !defined(LIBCFGPATH_OS_LINUX) && !defined(LIBCFGPATH_OS_OSX)
 #  error Cannot build this file because you are not on Linux
 #endif
 
@@ -10,7 +10,7 @@
 #include "libcfgpath/implementations.hpp"
 #include "libcfgpath/sizedstream.hpp"
 
-namespace libcfgpath {
+namespace libcfgpath::linux {
     enum PathType { HOME, SPECIFIC };
 
     static inline std::string expand(const char* string) {

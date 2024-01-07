@@ -11,7 +11,7 @@
 #include "libcfgpath/implementations.hpp"
 #include "libcfgpath/sizedstream.hpp"
 
-namespace libcfgpath {
+namespace libcfgpath::osx {
     static inline bool getBaseFolder(SizedStream& stream, const std::string& appName) {
         // This function does not create the folder it returns
         char buffer[MAX_PATH_LENGTH];

@@ -11,7 +11,7 @@
 #include "libcfgpath/implementations.hpp"
 #include "libcfgpath/sizedstream.hpp"
 
-namespace libcfgpath {
+namespace libcfgpath::windows {
 	struct COMInitializer {
 	private:
 		bool isInitialized;

@@ -16,28 +16,33 @@
 // ## Includes depending on the platform
 #if defined(LIBCFGPATH_OS_LINUX)
 #  include <sys/stat.h> // mkdir
-#elif defined(LIBCFGPATH_OS_WINDOWS)
+#endif
+#if defined(LIBCFGPATH_OS_WINDOWS)
 #  include <windows.h> // MAX_PATH
 #  include <direct.h> // _mkdir
 #  include <io.h> // _access
-#elif defined(LIBCFGPATH_OS_OSX)
+#endif
+#if defined(LIBCFGPATH_OS_OSX)
 #  include <sys/stat.h> // mkdir
 #  include <sys/syslimits.h> // PATH_MAX
 #endif
 
 // ## Values depending on the platform
-#if defined(LIBCFGPATH_OS_LINUX)
-#  define PATH_SEP_CHAR '/'
-#  define PATH_SEP_STR "/"
-#  define MAX_PATH_LENGTH 512  // arbitrary value
+#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#  if !defined(LIBCFGPATH_OS_OSX) // Only for linux
+#    define PATH_SEP_CHAR '/'
+#    define PATH_SEP_STR "/"
+#    define MAX_PATH_LENGTH 512  // arbitrary value
 
-#  define CONFIG_EXTENSION ".conf"
-#  define MKDIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) // 0755
-
+#    define CONFIG_EXTENSION ".conf"
+#    define MKDIR_MODE (S_IRWXU | S_IRGRP | S_IXGRP | S_IROTH | S_IXOTH) // 0755
+#  endif
 #  define LIBCFGPATH_LINUX_DEFAULT_CONFIG_FOLDER "$HOME/.config"
 #  define LIBCFGPATH_LINUX_DEFAULT_DATA_FOLDER "$HOME/.local/share"
 #  define LIBCFGPATH_LINUX_DEFAULT_CACHE_FOLDER "$HOME/.cache"
-#elif defined(LIBCFGPATH_OS_WINDOWS)
+#endif
+
+#if defined(LIBCFGPATH_OS_WINDOWS)
 #  define PATH_SEP_CHAR '\\'
 #  define PATH_SEP_STR "\\"
 #  define MAX_PATH_LENGTH MAX_PATH // Defined in the windows API
@@ -51,7 +56,9 @@
 
 #  define LIBCFGPATH_WINDOWS_CONFIG_FOLDER "configuration"
 #  define LIBCFGPATH_WINDOWS_DATA_FOLDER "data"
-#elif defined(LIBCFGPATH_OS_OSX)
+#endif
+
+#if defined(LIBCFGPATH_OS_OSX)
 #  define PATH_SEP_CHAR '/'
 #  define PATH_SEP_STR "/"
 #  define MAX_PATH_LENGTH PATH_MAX // From <sys/syslimits.h>
