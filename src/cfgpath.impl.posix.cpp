@@ -81,13 +81,13 @@ namespace libcfgpath::posix {
         getJSONConfigFile,
         getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
         appName << PATH_SEP_CHAR,
-        appName << LIBCFGPATH_JSON_EXTENSION
+        fileName.value_or(appName) << LIBCFGPATH_JSON_EXTENSION
     )
 
     DEFINE_GET_FILE_FUNCTION(
         getPosixConfigFile,
         getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
         appName << PATH_SEP_CHAR,
-        appName << LIBCFGPATH_POSIX_CONFIG_EXTENSION
+        fileName.value_or(appName) << LIBCFGPATH_POSIX_CONFIG_EXTENSION
     )
 } // libcfgpath::posix

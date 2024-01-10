@@ -121,13 +121,13 @@ namespace libcfgpath::windows {
 		getJSONConfigFile,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
 		appName << PATH_SEP_CHAR,
-		appName << LIBCFGPATH_JSON_EXTENSION
+		fileName.value_or(appName) << LIBCFGPATH_JSON_EXTENSION
 	)
 
 	DEFINE_GET_FILE_FUNCTION(
 		getWindowsConfigFile,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
 		appName << PATH_SEP_CHAR,
-		appName << LIBCFGPATH_WINDOWS_CONFIG_EXTENSION
+		fileName.value_or(appName) << LIBCFGPATH_WINDOWS_CONFIG_EXTENSION
 	)
 } // libcfgpath::windows

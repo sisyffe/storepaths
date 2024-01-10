@@ -56,17 +56,19 @@ namespace libcfgpath::osx {
         getJSONConfigFile,
         getSpecificFolder(result, SYSDIR_DIRECTORY_APPLICATION_SUPPORT),
         appName << PATH_SEP_CHAR << LIBCFGPATH_OSX_CONFIG_FOLDER << PATH_SEP_CHAR,
-        appName << LIBCFGPATH_JSON_EXTENSION
+        fileName.value_or(appName) << LIBCFGPATH_JSON_EXTENSION
     )
 
-    std::pair<std::string, PathInfo> getOsxConfigFile(const std::string& bundleIdentifier) {
+    std::pair<std::string, PathInfo> getOsxConfigFile(const std::string& appName,
+            const std::optional<std::string>& fileName) {
+        UNUSED(appName) // OSX implementation does not use this but others do so need the dignature to be the same
         SizedStream stream{ MAX_PATH_LENGTH };
         const char* homeDir = getenv("HOME");
 
         if (homeDir == nullptr)
             return { "", { false, 0, false, false} };
 
-        stream << homeDir << "/Library/Preferences/" << bundleIdentifier << LIBCFGPATH_OSX_CONFIG_EXTENSION;
+        stream << homeDir << "/Library/Preferences/" << fileName.value_or(appName) << LIBCFGPATH_OSX_CONFIG_EXTENSION;
         return { stream.toString(), { true, 0, false, true } };
     }
 } // libcfgpath::osx

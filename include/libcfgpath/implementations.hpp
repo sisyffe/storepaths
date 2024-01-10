@@ -19,7 +19,7 @@
     }
 
 #define DEFINE_GET_FILE_FUNCTION(funcName, funcCalled, customForFolder, cutsomForFile) \
-    std::pair<std::string, PathInfo> funcName(const std::string& appName) { \
+    std::pair<std::string, PathInfo> funcName(const std::string& appName, const std::optional<std::string>& fileName) { \
         SizedStream result{ MAX_PATH_LENGTH }; \
         \
         if (!funcCalled) /* the function failed to retrieve the path */ \

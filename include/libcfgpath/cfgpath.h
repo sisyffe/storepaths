@@ -6,32 +6,36 @@
 // # Implementation for C++
 #ifdef __cplusplus
 #include <string>
+#include <optional>
 
 // ## Implementation for each platform
-#define DECLARE_CPP_FUNCS(platformConfigFileName, platformConfigFileArgument) \
+#define DECLARE_CPP_FUNCS(platformConfigFileName) \
     std::pair<std::string, PathInfo> getConfigFolder(const std::string& appName); \
     std::pair<std::string, PathInfo> getDataFolder(const std::string& appName); \
     std::pair<std::string, PathInfo> getCacheFolder(const std::string& appName); \
-    std::pair<std::string, PathInfo> getJSONConfigFile(const std::string& appName); \
-    std::pair<std::string, PathInfo> platformConfigFileName(platformConfigFileArgument); \
+    std::pair<std::string, PathInfo> getJSONConfigFile(const std::string& appName, \
+        const std::optional<std::string>& fileName = std::nullopt); \
+    std::pair<std::string, PathInfo> platformConfigFileName(const std::string& appName, \
+        const std::optional<std::string>& fileName = std::nullopt); \
     \
     std::pair<std::string, PathInfo> getFolder(Folders folderType, const std::string& appName); \
-    std::pair<std::string, PathInfo> getFile(Files fileType, const std::string& appName);
+    std::pair<std::string, PathInfo> getFile(Files fileType, const std::string& appName, \
+        const std::optional<std::string>& fileName = std::nullopt);
 
 namespace libcfgpath {
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
     namespace posix {
-        DECLARE_CPP_FUNCS(getPosixConfigFile, const std::string& appName)
+        DECLARE_CPP_FUNCS(getPosixConfigFile)
     } // linux
 #endif
 #if defined(LIBCFGPATH_OS_WINDOWS)
     namespace windows {
-        DECLARE_CPP_FUNCS(getWindowsConfigFile, const std::string& appName)
+        DECLARE_CPP_FUNCS(getWindowsConfigFile)
     } // windows
 #endif
 #if defined(LIBCFGPATH_OS_OSX)
     namespace osx {
-        DECLARE_CPP_FUNCS(getOsxConfigFile, const std::string& bundleIdentifier)
+        DECLARE_CPP_FUNCS(getOsxConfigFile)
     } // osx
 #endif
 } // libcfgpath
@@ -59,8 +63,8 @@ namespace libcfgpath {
     PathInfo configName(char* outBuffer, size_t maxLength, const char* appName); \
     PathInfo dataName(char* outBuffer, size_t maxLength, const char* appName); \
     PathInfo cacheName(char* outBuffer, size_t maxLength, const char* appName); \
-    PathInfo confFileName(char* outBuffer, size_t maxLength, const char* appName); \
-    PathInfo platformConfName(char* outBuffer, size_t maxLength, const char* appName);
+    PathInfo confFileName(char* outBuffer, size_t maxLength, const char* appName, const char* fileName); \
+    PathInfo platformConfName(char* outBuffer, size_t maxLength, const char* appName, const char* fileName);
 
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
     DECLARE_C_FUNCS(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixJSONConfigFile, getPosixConfigFile)
@@ -85,9 +89,11 @@ namespace libcfgpath {
     static inline PathInfo getCacheFolder(char* outBuffer, const size_t maxLength, const char* appName) { \
         return aliasCacheName(outBuffer, maxLength, appName); \
     } \
-    static inline PathInfo getJSONConfigFile(char* outBuffer, const size_t maxLength, const char* appName) { \
-        return aliasConfFileName(outBuffer, maxLength, appName); \
-    }
+    static inline PathInfo getJSONConfigFile(char* outBuffer, const size_t maxLength, \
+            const char* appName, const char* fileName) { \
+        return aliasConfFileName(outBuffer, maxLength, appName, fileName); \
+    } \
+    /* No alias for platform config file */
 
 // Only one can be defined
 #if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_USING_POSIX_IMPL_FOR_OSX)
