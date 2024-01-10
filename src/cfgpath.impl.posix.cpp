@@ -25,8 +25,7 @@ namespace libcfgpath::posix {
         return result;
     }
 
-    static inline bool getSpecificFolder(SizedStream& stream, const std::string& appName,
-                                 const char* envVar, const char* defaultFolder) {
+    static inline bool getSpecificFolder(SizedStream& stream, const char* envVar, const char* defaultFolder) {
         PathType pathType = SPECIFIC;
         const char* var = getenv(envVar);
 
@@ -56,31 +55,39 @@ namespace libcfgpath::posix {
         }
 
         // Add the app name
-        stream << PATH_SEP_CHAR << appName << PATH_SEP_CHAR;
+        stream << PATH_SEP_CHAR;
         return true;
     }
 
     DEFINE_GET_FOLDER_FUNCTION(
         getConfigFolder,
-        getSpecificFolder(result, appName, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
-        ""
+        getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
+        appName << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getDataFolder,
-        getSpecificFolder(result, appName, "XDG_DATA_HOME", LIBCFGPATH_POSIX_DEFAULT_DATA_FOLDER),
-        ""
+        getSpecificFolder(result, "XDG_DATA_HOME", LIBCFGPATH_POSIX_DEFAULT_DATA_FOLDER),
+        appName << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getCacheFolder,
-        getSpecificFolder(result, appName, "XDG_CACHE_HOME", LIBCFGPATH_POSIX_DEFAULT_CACHE_FOLDER),
-        ""
+        getSpecificFolder(result, "XDG_CACHE_HOME", LIBCFGPATH_POSIX_DEFAULT_CACHE_FOLDER),
+        appName << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FILE_FUNCTION(
-        getConfigFile,
-        getSpecificFolder(result, appName, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
-        appName << CONFIG_EXTENSION
+        getJSONConfigFile,
+        getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
+        appName << PATH_SEP_CHAR,
+        appName << LIBCFGPATH_JSON_EXTENSION
     )
-} // libcfgpath
+
+    DEFINE_GET_FILE_FUNCTION(
+        getPosixConfigFile,
+        getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
+        appName << PATH_SEP_CHAR,
+        appName << LIBCFGPATH_POSIX_CONFIG_EXTENSION
+    )
+} // libcfgpath::posix

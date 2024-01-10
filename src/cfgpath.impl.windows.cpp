@@ -11,23 +11,27 @@
 #include "libcfgpath/implementations.hpp"
 #include "libcfgpath/sizedstream.hpp"
 
+#define LIBCFGPATH_WINDOWS_RETURN(returnVal) \
+	CoTaskMemFree(path); \
+	return returnVal;
+
 namespace libcfgpath::windows {
 	struct COMInitializer {
 	private:
 		bool isInitialized;
 	public:
 		COMInitializer() {
-			isInitialized = SUCCEEDED(CoInitialize(NULL)) ? true : false;
+		    isInitialized = SUCCEEDED(CoInitialize(NULL)) ? true : false;
 		}
 
 		~COMInitializer() {
-			CoUninitialize();
+		    CoUninitialize();
 		}
 
-		inline bool initialized() const { return isInitialized; }
+		[[nodiscard]] inline bool initialized() const { return isInitialized; }
 	};
 
-	static COMInitializer initializer;
+	static COMInitializer comInitializer;
 
 	static inline std::optional<std::string> toStringfromWide(const std::wstring& inString) {
 		// Get the required buffer size for the multi-byte string
@@ -49,7 +53,7 @@ namespace libcfgpath::windows {
 		std::string multiByteStr(bufferSize - 1, '\0');
 
 		// Perform the actual conversion
-		int result = WideCharToMultiByte(
+		const int result = WideCharToMultiByte(
 			CP_ACP, // Same codepage as above
 			0, // No flags
 			inString.c_str(), // Source
@@ -66,10 +70,8 @@ namespace libcfgpath::windows {
 		return multiByteStr;
 	}
 
-	static inline bool getSpecificFolder(SizedStream& stream, const KNOWNFOLDERID& id, const std::string& appName) {
-		// This function does not create the folder it returns
-
-		if (!initializer.initialized())
+	static inline bool getSpecificFolder(SizedStream& stream, const KNOWNFOLDERID& id) {
+		if (!comInitializer.initialized())
 			return false;
 
 		PWSTR path = nullptr;
@@ -82,42 +84,50 @@ namespace libcfgpath::windows {
 
 		if (FAILED(hr)) {
 			CoTaskMemFree(path);
-			return false;
+		    return false;
 		}
 
 		auto convertedString = toStringfromWide(path);
 
 		if (!convertedString.has_value()) {
 			CoTaskMemFree(path);
-			return false;
+		    return false;
 		}
 
 		stream << convertedString.value() << PATH_SEP_CHAR;
 		CoTaskMemFree(path);
-		return true;
+	    return true;
 	}
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getConfigFolder,
-		getSpecificFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
+		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
 		appName << PATH_SEP_CHAR << LIBCFGPATH_WINDOWS_CONFIG_FOLDER << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getDataFolder,
-		getSpecificFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
+		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
 		appName << PATH_SEP_CHAR << LIBCFGPATH_WINDOWS_DATA_FOLDER << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getCacheFolder,
-		getSpecificFolder(result, FOLDERID_LocalAppData, appName), // AppData\Local
+		getSpecificFolder(result, FOLDERID_LocalAppData), // AppData\Local
 		appName << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FILE_FUNCTION(
-		getConfigFile,
-		getSpecificFolder(result, FOLDERID_RoamingAppData, appName), // AppData\Roaming
-		appName << CONFIG_EXTENSION
+		getJSONConfigFile,
+		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
+		appName << PATH_SEP_CHAR,
+		appName << LIBCFGPATH_JSON_EXTENSION
 	)
-}
+
+	DEFINE_GET_FILE_FUNCTION(
+		getWindowsConfigFile,
+		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
+		appName << PATH_SEP_CHAR,
+		appName << LIBCFGPATH_WINDOWS_CONFIG_EXTENSION
+	)
+} // libcfgpath::windows

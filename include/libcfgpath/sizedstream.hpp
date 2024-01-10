@@ -9,7 +9,7 @@ namespace libcfgpath {
         static inline double expandIncrement = 1.25;
 
         char* buffer;
-        char* currentPos; // This Should always points to a '\0' character
+        char* currentPos; // This should always points to a '\0' character
         size_t reservedSize;
 
         [[nodiscard]] inline bool canHold(const size_t additionnalSize) const {

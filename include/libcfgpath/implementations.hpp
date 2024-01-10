@@ -6,30 +6,30 @@
 #endif
 
 #define DEFINE_GET_FOLDER_FUNCTION(funcName, funcCalled, custom) \
-    std::pair<std::string, bool> funcName(const std::string& appName) { \
+    std::pair<std::string, PathInfo> funcName(const std::string& appName) { \
         SizedStream result{ MAX_PATH_LENGTH }; \
         \
-        if (!funcCalled) \
-            return { "", false } ; \
+        if (!funcCalled) /* the function failed to retrieve the path */ \
+            return { "", { false, 0, false, false } } ; \
         \
         result << custom; \
-        if (mkdirParent(result.readBuffer(), MKDIR_MODE) != 0) \
-            return { result.toString(), false }; \
+        int mkdirCode = mkdirParent(result.readBuffer(), LIBCFGPATH_MKDIR_MODE); \
         \
-        return { result.toString(), true } ; \
+        return { result.toString(), { true, mkdirCode, false, mkdirCode == 0} } ; \
     }
 
-// The difference is that there is no mkdir for this
-#define DEFINE_GET_FILE_FUNCTION(funcName, funcCalled, custom) \
-    std::string funcName(const std::string& appName) { \
+#define DEFINE_GET_FILE_FUNCTION(funcName, funcCalled, customForFolder, cutsomForFile) \
+    std::pair<std::string, PathInfo> funcName(const std::string& appName) { \
         SizedStream result{ MAX_PATH_LENGTH }; \
         \
-        if (!funcCalled) \
-            return "" ; \
+        if (!funcCalled) /* the function failed to retrieve the path */ \
+            return { "", { false, 0, false, false } } ; \
         \
-        result << custom; \
+        result << customForFolder; \
+        int mkdirCode = mkdirParent(result.readBuffer(), LIBCFGPATH_MKDIR_MODE); \
+        result << cutsomForFile; \
         \
-        return result.toString() ; \
+        return { result.toString(), { true, mkdirCode, false, mkdirCode == 0} } ; \
     }
 
 #endif //LIBGRADES_IMPLEMENTATIONS_HPP_

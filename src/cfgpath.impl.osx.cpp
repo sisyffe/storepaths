@@ -12,16 +12,15 @@
 #include "libcfgpath/sizedstream.hpp"
 
 namespace libcfgpath::osx {
-    static inline bool getBaseFolder(SizedStream& stream, const std::string& appName) {
-        // This function does not create the folder it returns
+    static inline bool getSpecificFolder(SizedStream& stream, const sysdir_search_path_directory_t directory) {
         char buffer[MAX_PATH_LENGTH];
         const sysdir_search_path_enumeration_state state = sysdir_start_search_path_enumeration(
-            SYSDIR_DIRECTORY_APPLICATION_SUPPORT,
+            directory,
             SYSDIR_DOMAIN_MASK_USER
         );
-        if (!sysdir_get_next_search_path_enumeration(state, buffer)) {
+        if (!sysdir_get_next_search_path_enumeration(state, buffer))
             return false;
-        }
+        // You can continue with `sysdir_get_next_search_path_enumeration` but here we are only getting the first one only
 
         glob_t globbuf;
         if (glob(buffer, GLOB_TILDE, nullptr, &globbuf) != 0) {
@@ -29,7 +28,7 @@ namespace libcfgpath::osx {
             return false;
         }
 
-        stream << globbuf.gl_pathv[0] << PATH_SEP_CHAR << appName << PATH_SEP_CHAR;
+        stream << globbuf.gl_pathv[0] << PATH_SEP_CHAR;
 
         globfree(&globbuf);
         return true;
@@ -37,25 +36,37 @@ namespace libcfgpath::osx {
 
     DEFINE_GET_FOLDER_FUNCTION(
         getConfigFolder,
-        getBaseFolder(result, appName),
-        LIBCFGPATH_OSX_CONFIG_FOLDER << PATH_SEP_CHAR
+        getSpecificFolder(result, SYSDIR_DIRECTORY_APPLICATION_SUPPORT),
+        appName << PATH_SEP_CHAR << LIBCFGPATH_OSX_CONFIG_FOLDER << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getDataFolder,
-        getBaseFolder(result, appName),
-        LIBCFGPATH_OSX_DATA_FOLDER << PATH_SEP_CHAR
+        getSpecificFolder(result, SYSDIR_DIRECTORY_APPLICATION_SUPPORT),
+        appName << PATH_SEP_CHAR << LIBCFGPATH_OSX_DATA_FOLDER << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getCacheFolder,
-        getBaseFolder(result, appName),
-        LIBCFGPATH_OSX_CACHE_FOLDER << PATH_SEP_CHAR
+        getSpecificFolder(result, SYSDIR_DIRECTORY_CACHES),
+        appName << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FILE_FUNCTION(
-        getConfigFile,
-        getBaseFolder(result, appName),
-        appName << CONFIG_EXTENSION
+        getJSONConfigFile,
+        getSpecificFolder(result, SYSDIR_DIRECTORY_APPLICATION_SUPPORT),
+        appName << PATH_SEP_CHAR << LIBCFGPATH_OSX_CONFIG_FOLDER << PATH_SEP_CHAR,
+        appName << LIBCFGPATH_JSON_EXTENSION
     )
-} // libcfgpath
+
+    std::pair<std::string, PathInfo> getOsxConfigFile(const std::string& bundleIdentifier) {
+        SizedStream stream{ MAX_PATH_LENGTH };
+        const char* homeDir = getenv("HOME");
+
+        if (homeDir == nullptr)
+            return { "", { false, 0, false, false} };
+
+        stream << homeDir << "/Library/Preferences/" << bundleIdentifier << LIBCFGPATH_OSX_CONFIG_EXTENSION;
+        return { stream.toString(), { true, 0, false, true } };
+    }
+} // libcfgpath::osx
