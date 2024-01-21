@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Target
-project(libcfgpath)
-add_library(libcfgpath STATIC)
-target_include_directories(libcfgpath PRIVATE
+project(storepaths)
+add_library(storepaths STATIC)
+target_include_directories(storepaths PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
@@ -25,7 +25,7 @@ else()
     message(SEND_ERROR "Unknown platform")
 endif()
 
-target_sources(libcfgpath PRIVATE
+target_sources(storepaths PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/common.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/cfgpath.cpp
         ${IMPLEMENTATION_FILE}
@@ -34,7 +34,7 @@ target_sources(libcfgpath PRIVATE
 
 # Compile options
 if(UNIX)
-    target_compile_options(libcfgpath
+    target_compile_options(storepaths
             PUBLIC
             -Wall
             -Wpedantic
