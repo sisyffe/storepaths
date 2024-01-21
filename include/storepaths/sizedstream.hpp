@@ -1,10 +1,10 @@
-#ifndef LIBCFGPATH_SIZEDSTREAM_H_
-#define LIBCFGPATH_SIZEDSTREAM_H_
+#ifndef STOREPATHS_SIZEDSTREAM_H_
+#define STOREPATHS_SIZEDSTREAM_H_
 
 #include <cstring>
 #include <string>
 
-namespace libcfgpath {
+namespace storepaths {
     class SizedStream final {
         static inline double expandIncrement = 1.25;
 
@@ -85,6 +85,6 @@ namespace libcfgpath {
             currentPos = buffer;
         }
     };
-} // libcfgpath
+} // storepaths
 
-#endif //LIBCFGPATH_SIZEDSTREAM_H_
+#endif //STOREPATHS_SIZEDSTREAM_H_

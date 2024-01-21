@@ -1,7 +1,7 @@
-#ifndef LIBGRADES_IMPLEMENTATIONS_HPP_
-#define LIBGRADES_IMPLEMENTATIONS_HPP_
+#ifndef STOREPATHS_IMPLEMENTATIONS_HPP_
+#define STOREPATHS_IMPLEMENTATIONS_HPP_
 
-#ifndef LIBCFGPATH_CAN_INCLUDE_IMPLEMENTATION_HPP
+#ifndef STOREPATHS_CAN_INCLUDE_IMPLEMENTATION_HPP
 #  error Cannot include implementations.hpp. It is only meant for internal usage.
 #endif
 
@@ -13,7 +13,7 @@
             return { "", { false, 0, false, false } } ; \
         \
         result << custom; \
-        int mkdirCode = mkdirParent(result.readBuffer(), LIBCFGPATH_MKDIR_MODE); \
+        int mkdirCode = mkdirParent(result.readBuffer(), STOREPATHS_MKDIR_MODE); \
         \
         return { result.toString(), { true, mkdirCode, false, mkdirCode == 0} } ; \
     }
@@ -26,10 +26,10 @@
             return { "", { false, 0, false, false } } ; \
         \
         result << customForFolder; \
-        int mkdirCode = mkdirParent(result.readBuffer(), LIBCFGPATH_MKDIR_MODE); \
+        int mkdirCode = mkdirParent(result.readBuffer(), STOREPATHS_MKDIR_MODE); \
         result << cutsomForFile; \
         \
         return { result.toString(), { true, mkdirCode, false, mkdirCode == 0} } ; \
     }
 
-#endif //LIBGRADES_IMPLEMENTATIONS_HPP_
+#endif //STOREPATHS_IMPLEMENTATIONS_HPP_

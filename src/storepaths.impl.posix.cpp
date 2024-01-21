@@ -1,16 +1,16 @@
-#include "libcfgpath/cfgpath.h"
+#include "storepaths/storepaths.h"
 
 #include <wordexp.h>
 
-#if !defined(LIBCFGPATH_OS_LINUX) && !defined(LIBCFGPATH_OS_OSX)
+#if !defined(STOREPATHS_OS_LINUX) && !defined(STOREPATHS_OS_OSX)
 #  error Cannot build this file because you are not on Linux
 #endif
 
-#define LIBCFGPATH_CAN_INCLUDE_IMPLEMENTATION_HPP
-#include "libcfgpath/implementations.hpp"
-#include "libcfgpath/sizedstream.hpp"
+#define STOREPATHS_CAN_INCLUDE_IMPLEMENTATION_HPP
+#include "storepaths/implementations.hpp"
+#include "storepaths/sizedstream.hpp"
 
-namespace libcfgpath::posix {
+namespace storepaths::posix {
     enum PathType { HOME, SPECIFIC };
 
     static inline std::string expand(const char* string) {
@@ -61,33 +61,33 @@ namespace libcfgpath::posix {
 
     DEFINE_GET_FOLDER_FUNCTION(
         getConfigFolder,
-        getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
+        getSpecificFolder(result, "XDG_CONFIG_HOME", STOREPATHS_POSIX_DEFAULT_CONFIG_FOLDER),
         appName << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getDataFolder,
-        getSpecificFolder(result, "XDG_DATA_HOME", LIBCFGPATH_POSIX_DEFAULT_DATA_FOLDER),
+        getSpecificFolder(result, "XDG_DATA_HOME", STOREPATHS_POSIX_DEFAULT_DATA_FOLDER),
         appName << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FOLDER_FUNCTION(
         getCacheFolder,
-        getSpecificFolder(result, "XDG_CACHE_HOME", LIBCFGPATH_POSIX_DEFAULT_CACHE_FOLDER),
+        getSpecificFolder(result, "XDG_CACHE_HOME", STOREPATHS_POSIX_DEFAULT_CACHE_FOLDER),
         appName << PATH_SEP_CHAR
     )
 
     DEFINE_GET_FILE_FUNCTION(
         getJSONConfigFile,
-        getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
+        getSpecificFolder(result, "XDG_CONFIG_HOME", STOREPATHS_POSIX_DEFAULT_CONFIG_FOLDER),
         appName << PATH_SEP_CHAR,
-        fileName.value_or(appName) << LIBCFGPATH_JSON_EXTENSION
+        fileName.value_or(appName) << STOREPATHS_JSON_EXTENSION
     )
 
     DEFINE_GET_FILE_FUNCTION(
         getPosixConfigFile,
-        getSpecificFolder(result, "XDG_CONFIG_HOME", LIBCFGPATH_POSIX_DEFAULT_CONFIG_FOLDER),
+        getSpecificFolder(result, "XDG_CONFIG_HOME", STOREPATHS_POSIX_DEFAULT_CONFIG_FOLDER),
         appName << PATH_SEP_CHAR,
-        fileName.value_or(appName) << LIBCFGPATH_POSIX_CONFIG_EXTENSION
+        fileName.value_or(appName) << STOREPATHS_POSIX_CONFIG_EXTENSION
     )
-} // libcfgpath::posix
+} // storepaths::posix

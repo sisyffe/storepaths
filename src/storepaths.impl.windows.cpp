@@ -1,21 +1,21 @@
-#include "libcfgpath/cfgpath.h"
+#include "storepaths/storepaths.h"
 
-#ifndef LIBCFGPATH_OS_WINDOWS
+#ifndef STOREPATHS_OS_WINDOWS
 #  error Cannot build this file because you are not on Windows
 #endif
 
 #include <ShlObj.h> // SHGetKnownFolderPath
 #include <optional>
 
-#define LIBCFGPATH_CAN_INCLUDE_IMPLEMENTATION_HPP
-#include "libcfgpath/implementations.hpp"
-#include "libcfgpath/sizedstream.hpp"
+#define STOREPATHS_CAN_INCLUDE_IMPLEMENTATION_HPP
+#include "storepaths/implementations.hpp"
+#include "storepaths/sizedstream.hpp"
 
-#define LIBCFGPATH_WINDOWS_RETURN(returnVal) \
+#define STOREPATHS_WINDOWS_RETURN(returnVal) \
 	CoTaskMemFree(path); \
 	return returnVal;
 
-namespace libcfgpath::windows {
+namespace storepaths::windows {
 	struct COMInitializer {
 	private:
 		bool isInitialized;
@@ -102,13 +102,13 @@ namespace libcfgpath::windows {
 	DEFINE_GET_FOLDER_FUNCTION(
 		getConfigFolder,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
-		appName << PATH_SEP_CHAR << LIBCFGPATH_WINDOWS_CONFIG_FOLDER << PATH_SEP_CHAR
+		appName << PATH_SEP_CHAR << STOREPATHS_WINDOWS_CONFIG_FOLDER << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getDataFolder,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
-		appName << PATH_SEP_CHAR << LIBCFGPATH_WINDOWS_DATA_FOLDER << PATH_SEP_CHAR
+		appName << PATH_SEP_CHAR << STOREPATHS_WINDOWS_DATA_FOLDER << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
@@ -121,13 +121,13 @@ namespace libcfgpath::windows {
 		getJSONConfigFile,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
 		appName << PATH_SEP_CHAR,
-		fileName.value_or(appName) << LIBCFGPATH_JSON_EXTENSION
+		fileName.value_or(appName) << STOREPATHS_JSON_EXTENSION
 	)
 
 	DEFINE_GET_FILE_FUNCTION(
 		getWindowsConfigFile,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
 		appName << PATH_SEP_CHAR,
-		fileName.value_or(appName) << LIBCFGPATH_WINDOWS_CONFIG_EXTENSION
+		fileName.value_or(appName) << STOREPATHS_WINDOWS_CONFIG_EXTENSION
 	)
-} // libcfgpath::windows
+} // storepaths::windows

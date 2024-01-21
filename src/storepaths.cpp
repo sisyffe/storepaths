@@ -1,4 +1,4 @@
-#include "libcfgpath/cfgpath.h"
+#include "storepaths/storepaths.h"
 
 #include <cstring>
 
@@ -29,28 +29,28 @@
         } \
     }
 
-namespace libcfgpath {
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+namespace storepaths {
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     namespace posix {
         DEFINE_GET_FILE_FOLDER_FUNCS(getPosixConfigFile)
     } // linux
 #endif
-#if defined(LIBCFGPATH_OS_WINDOWS)
+#if defined(STOREPATHS_OS_WINDOWS)
     namespace windows {
         DEFINE_GET_FILE_FOLDER_FUNCS(getWindowsConfigFile)
     } // windows
 #endif
-#if defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_OSX)
     namespace osx {
         DEFINE_GET_FILE_FOLDER_FUNCS(getOsxConfigFile)
     } // osx
 #endif
-} // libcfgpath
+} // storepaths
 
 #undef DEFINE_GET_FILE_FOLDER_FUNCS
 
 // # Proxy for C
-LIBCFGPATH_C_LINKAGE()
+STOREPATHS_C_LINKAGE()
 
 #define CPP_FOLDER_FUNC_WRAPPER(funcName, callbackFunc) \
     PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName) { \
@@ -82,19 +82,19 @@ LIBCFGPATH_C_LINKAGE()
     }
 
 #define DEFINE_C_WRAPPERS(nameSpace, aliasConfigName, aliasDataName, aliasCacheName, aliasJSONConfFileName, aliasConfFileName) \
-    CPP_FOLDER_FUNC_WRAPPER(aliasConfigName, libcfgpath::nameSpace::getConfigFolder) \
-    CPP_FOLDER_FUNC_WRAPPER(aliasDataName, libcfgpath::nameSpace::getDataFolder) \
-    CPP_FOLDER_FUNC_WRAPPER(aliasCacheName, libcfgpath::nameSpace::getCacheFolder) \
-    CPP_FILE_FUNC_WRAPPER(aliasJSONConfFileName, libcfgpath::nameSpace::getJSONConfigFile) \
-    CPP_FILE_FUNC_WRAPPER(aliasConfFileName, libcfgpath::nameSpace::aliasConfFileName)
+    CPP_FOLDER_FUNC_WRAPPER(aliasConfigName, storepaths::nameSpace::getConfigFolder) \
+    CPP_FOLDER_FUNC_WRAPPER(aliasDataName, storepaths::nameSpace::getDataFolder) \
+    CPP_FOLDER_FUNC_WRAPPER(aliasCacheName, storepaths::nameSpace::getCacheFolder) \
+    CPP_FILE_FUNC_WRAPPER(aliasJSONConfFileName, storepaths::nameSpace::getJSONConfigFile) \
+    CPP_FILE_FUNC_WRAPPER(aliasConfFileName, storepaths::nameSpace::aliasConfFileName)
 
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     DEFINE_C_WRAPPERS(posix, getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixJSONConfigFile, getPosixConfigFile)
 #endif
-#if defined(LIBCFGPATH_OS_WINDOWS)
+#if defined(STOREPATHS_OS_WINDOWS)
     DEFINE_C_WRAPPERS(windows, getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsJSONConfigFile, getWindowsConfigFile)
 #endif
-#if defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_OSX)
     DEFINE_C_WRAPPERS(osx, getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxJSONConfigFile, getOsxConfigFile)
 #endif
 
@@ -102,4 +102,4 @@ LIBCFGPATH_C_LINKAGE()
 #undef CPP_FOLDER_FUNC_WRAPPER
 #undef CPP_FILE_FUNC_WRAPPER
 
-LIBCFGPATH_C_LINKAGE_END()
+STOREPATHS_C_LINKAGE_END()

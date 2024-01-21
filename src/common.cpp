@@ -1,21 +1,21 @@
-#include "libcfgpath/common.h"
+#include "storepaths/common.h"
 
 #include <string>
 
-#include "libcfgpath/sizedstream.hpp"
+#include "storepaths/sizedstream.hpp"
 
-using namespace libcfgpath;
+using namespace storepaths;
 
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
 #  include <unistd.h> // access
 #endif
 
-LIBCFGPATH_C_LINKAGE()
+STOREPATHS_C_LINKAGE()
 
 int canAccessFolder(const char* path) {
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     if (access(path, F_OK | R_OK) == 0)
-#elif defined(LIBCFGPATH_OS_WINDOWS)
+#elif defined(STOREPATHS_OS_WINDOWS)
     if (_access(path, 02) == 0)
 #endif
         return 0;
@@ -23,19 +23,19 @@ int canAccessFolder(const char* path) {
 }
 
 int crossMkdir(const char* path, const mode_t mode) {
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     return mkdir(path, mode);
-#elif defined(LIBCFGPATH_OS_WINDOWS)
+#elif defined(STOREPATHS_OS_WINDOWS)
     UNUSED(mode)
     return _mkdir(path);
 #endif
 }
 
 static inline void addToken(SizedStream& elements, const char* token, bool firstIter) {
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     UNUSED(firstIter)
     elements << PATH_SEP_CHAR;
-#elif defined(LIBCFGPATH_OS_WINDOWS)
+#elif defined(STOREPATHS_OS_WINDOWS)
     if (!firstIter)
         elements << PATH_SEP_CHAR;
 #endif
@@ -69,4 +69,4 @@ int mkdirParent(const char* path, const mode_t mode) {
     return returnCode;
 }
 
-LIBCFGPATH_C_LINKAGE_END()
+STOREPATHS_C_LINKAGE_END()

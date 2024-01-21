@@ -1,7 +1,7 @@
-#ifndef LIBCFGPATH_CFGPATH_H_
-#define LIBCFGPATH_CFGPATH_H_
+#ifndef STOREPATHS_STOREPATHS_H_
+#define STOREPATHS_STOREPATHS_H_
 
-#include "libcfgpath/common.h"
+#include "storepaths/common.h"
 
 // # Implementation for C++
 #ifdef __cplusplus
@@ -22,36 +22,36 @@
     std::pair<std::string, PathInfo> getFile(Files fileType, const std::string& appName, \
         const std::optional<std::string>& fileName = std::nullopt);
 
-namespace libcfgpath {
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+namespace storepaths {
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     namespace posix {
         DECLARE_CPP_FUNCS(getPosixConfigFile)
     } // linux
 #endif
-#if defined(LIBCFGPATH_OS_WINDOWS)
+#if defined(STOREPATHS_OS_WINDOWS)
     namespace windows {
         DECLARE_CPP_FUNCS(getWindowsConfigFile)
     } // windows
 #endif
-#if defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_OSX)
     namespace osx {
         DECLARE_CPP_FUNCS(getOsxConfigFile)
     } // osx
 #endif
-} // libcfgpath
+} // storepaths
 
 #undef DECLARE_CPP_FUNCS
 
 // ## Using namespaces for current platform
-namespace libcfgpath {
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_USING_POSIX_IMPL_FOR_OSX)
+namespace storepaths {
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_USING_POSIX_IMPL_FOR_OSX)
     using namespace posix;
-#elif defined(LIBCFGPATH_OS_WINDOWS)
+#elif defined(STOREPATHS_OS_WINDOWS)
     using namespace windows;
-#elif defined(LIBCFGPATH_OS_OSX) && !defined(LIBCFGPATH_USING_POSIX_IMPL_FOR_OSX)
+#elif defined(STOREPATHS_OS_OSX) && !defined(STOREPATHS_USING_POSIX_IMPL_FOR_OSX)
     using namespace osx;
 #endif
-} // libcfgpath
+} // storepaths
 
 #else // #ifdef __cplusplus
 
@@ -66,13 +66,13 @@ namespace libcfgpath {
     PathInfo confFileName(char* outBuffer, size_t maxLength, const char* appName, const char* fileName); \
     PathInfo platformConfName(char* outBuffer, size_t maxLength, const char* appName, const char* fileName);
 
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     DECLARE_C_FUNCS(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixJSONConfigFile, getPosixConfigFile)
 #endif
-#if defined(LIBCFGPATH_OS_WINDOWS)
+#if defined(STOREPATHS_OS_WINDOWS)
     DECLARE_C_FUNCS(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsJSONConfigFile, getWindowsConfigFile)
 #endif
-#if defined(LIBCFGPATH_OS_OSX)
+#if defined(STOREPATHS_OS_OSX)
     DECLARE_C_FUNCS(getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxJSONConfigFile, getOsxConfigFile)
 #endif
 
@@ -96,11 +96,11 @@ namespace libcfgpath {
     /* No alias for platform config file */
 
 // Only one can be defined
-#if defined(LIBCFGPATH_OS_LINUX) || defined(LIBCFGPATH_USING_POSIX_IMPL_FOR_OSX)
+#if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_USING_POSIX_IMPL_FOR_OSX)
     DEFINE_C_ALIASES(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixJSONConfigFile)
-#elif defined(LIBCFGPATH_OS_WINDOWS)
+#elif defined(STOREPATHS_OS_WINDOWS)
     DEFINE_C_ALIASES(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsJSONConfigFile)
-#elif defined(LIBCFGPATH_OS_OSX) && !defined(LIBCFGPATH_USING_POSIX_IMPL_FOR_OSX)
+#elif defined(STOREPATHS_OS_OSX) && !defined(STOREPATHS_USING_POSIX_IMPL_FOR_OSX)
     DEFINE_C_ALIASES(getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxJSONConfigFile)
 #endif
 
@@ -108,4 +108,4 @@ namespace libcfgpath {
 
 #endif // #ifdef __cplusplus #else
 
-#endif //LIBCFGPATH_CFGPATH_H_
+#endif //STOREPATHS_STOREPATHS_H_
