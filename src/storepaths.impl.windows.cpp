@@ -102,13 +102,13 @@ namespace storepaths::windows {
 	DEFINE_GET_FOLDER_FUNCTION(
 		getConfigFolder,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
-		appName << PATH_SEP_CHAR << STOREPATHS_WINDOWS_CONFIG_FOLDER << PATH_SEP_CHAR
+		appName << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
 		getDataFolder,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
-		appName << PATH_SEP_CHAR << STOREPATHS_WINDOWS_DATA_FOLDER << PATH_SEP_CHAR
+		appName << PATH_SEP_CHAR
 	)
 
 	DEFINE_GET_FOLDER_FUNCTION(
