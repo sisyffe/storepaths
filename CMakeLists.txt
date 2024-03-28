@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # Options
-option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+option(BUILD_SHARED_LIBS "Build shared libraries" OFF)
 
 # Standard
 set(CMAKE_CXX_STANDARD 23)
