@@ -53,7 +53,7 @@ namespace storepaths {
 STOREPATHS_C_LINKAGE()
 
 #define CPP_FOLDER_FUNC_WRAPPER(funcName, callbackFunc) \
-    PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName) { \
+    storepaths::PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName) { \
         auto [string, info] = callbackFunc(appName); \
         if (!info.found) { \
             outBuffer[0] = '\0'; \
@@ -68,7 +68,7 @@ STOREPATHS_C_LINKAGE()
 
 // The differrence is that file functions get one more parameter: fileName
 #define CPP_FILE_FUNC_WRAPPER(funcName, callbackFunc) \
-    PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName, const char* fileName) { \
+    storepaths::PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName, const char* fileName) { \
         auto [string, info] = callbackFunc(appName, fileName ? std::optional{ fileName } : std::nullopt); \
         if (!info.found) { \
             outBuffer[0] = '\0'; \
