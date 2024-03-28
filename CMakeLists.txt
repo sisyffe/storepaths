@@ -1,12 +1,23 @@
 cmake_minimum_required(VERSION 3.20)
 
+# Options
+option(BUILD_SHARED_LIBS "Build shared libraries" ON)
+
 # Standard
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Target
 project(storepaths)
-add_library(storepaths STATIC)
+if(NOT BUILD_SHARED_LIBS)
+    add_library(storepaths STATIC)
+else()
+    add_library(storepaths SHARED)
+    set_target_properties(storepaths PROPERTIES
+            POSITION_INDEPENDENT_CODE ON
+            SOVERSION 1
+    )
+endif()
 target_include_directories(storepaths PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
