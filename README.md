@@ -19,3 +19,4 @@ Just execute CMake (other information will be written later).
 ## Usage
 
 **_Please consider that this library is in development. It is not fully finished._**
+TEST
