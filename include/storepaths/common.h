@@ -62,8 +62,6 @@
 #define STOREPATHS_POSIX_DEFAULT_CACHE_FOLDER "$HOME/.cache"
 // Windows
 #define STOREPATHS_WINDOWS_CONFIG_EXTENSION ".ini"
-#define STOREPATHS_WINDOWS_CONFIG_FOLDER "config"
-#define STOREPATHS_WINDOWS_DATA_FOLDER "data"
 
 #define STOREPATHS_WINDOWS_COM_INIT_NOINIT 0
 #define STOREPATHS_WINDOWS_COM_INIT_GLOBAL 1
@@ -75,8 +73,6 @@
 #endif
 // OSX
 #define STOREPATHS_OSX_CONFIG_EXTENSION ".plist"
-#define STOREPATHS_OSX_CONFIG_FOLDER "config"
-#define STOREPATHS_OSX_DATA_FOLDER "data"
 
 // ## Use extern "C" when compiled in C++
 #ifdef __cplusplus
@@ -84,17 +80,13 @@
       extern "C" {
 #  define STOREPATHS_C_LINKAGE_END() \
       } // extern "C"
-#  define STOREPATHS_STRUCT_DEFINITION(structName) \
-      struct structName {
-#  define STOREPATHS_STRUCT_DEFINITION_END(structName) \
-      };
+#  define STOREPATHS_NAMESPACE_IF_CPP() \
+    namespace storepaths {
+#  define STOREPATHS_NAMESPACE_IF_CPP_END() \
+    } // storepaths
 #else
 #  define STOREPATHS_C_LINKAGE()
 #  define STOREPATHS_C_LINKAGE_END()
-#  define STOREPATHS_STRUCT_DEFINITION(structName) \
-      typedef struct {
-#  define STOREPATHS_STRUCT_DEFINITION_END(structName) \
-      } structName;
 #endif
 
 // ## Other things
@@ -119,12 +111,14 @@ namespace storepaths {
 } // storepaths
 #endif // __cplusplus
 
-STOREPATHS_STRUCT_DEFINITION(PathInfo)
+STOREPATHS_NAMESPACE_IF_CPP()
+typedef struct {
     bool found;
     int mkdirReturnCode;
     bool bufferTooSmall;
     bool succeeded;
-STOREPATHS_STRUCT_DEFINITION_END(PathInfo)
+} PathInfo;
+STOREPATHS_NAMESPACE_IF_CPP_END()
 
 // ## System functions
 STOREPATHS_C_LINKAGE()

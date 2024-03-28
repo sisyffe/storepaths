@@ -26,7 +26,7 @@ namespace storepaths {
 #if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
     namespace posix {
         DECLARE_CPP_FUNCS(getPosixConfigFile)
-    } // linux
+    } // posix
 #endif
 #if defined(STOREPATHS_OS_WINDOWS)
     namespace windows {
