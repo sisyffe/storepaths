@@ -10,7 +10,8 @@ Every function this library defines is in the `storepaths` namespace. These are 
 std::pair<std::string, PathInfo> storepaths::getConfigFolder(const std::string& appName);
 std::pair<std::string, PathInfo> storepaths::getDataFolder(const std::string& appName);
 std::pair<std::string, PathInfo> storepaths::getCacheFolder(const std::string& appName);
-std::pair<std::string, PathInfo> storepaths::getJSONConfigFile(const std::string& appName, const std::optional<std::string>& fileName = std::nullopt);
+std::pair<std::string, PathInfo> storepaths::getCommonConfigFile(const std::string& appName, const std::optional<std::string>& fileName = std::nullopt,
+                                                                 const std::string& extension = "json");
 std::pair<std::string, PathInfo> storepaths::GET_PLATFORM_CONFIG_FILE(const std::string& appName, const std::optional<std::string>& fileName = std::nullopt);
 ```
 The `GET_PLATFORM_CONFIG_FILE` function get these names depending on the platform:
@@ -26,7 +27,7 @@ On macOS for example, the configuration file should use this format: `com.compan
 On windows, it should be a `.ini` file.
 You cannot write the same thing into a `.plist` file and into a `.ini` file.
 So with different function names, there is no ambiguity.
-Use the `getJSONConfigFile` instead if you want a cross-platform alternative.
+Use the `getCommonConfigFile` instead if you want a cross-platform alternative.
 The functions in the `storepaths` namespace are simply _aliases_ to the platform specific functions.
 
 This is similar with the platform specific configuration file (on most platforms, see platform specific implementations)
@@ -36,7 +37,8 @@ This is similar with the platform specific configuration file (on most platforms
 Additionally, those functions can also be used:
 ```c++
 std::pair<std::string, PathInfo> getFolder(storepaths::Folders folderType, const std::string& appName);
-std::pair<std::string, PathInfo> getFile(storepaths::Files fileType, const std::string& appName, const std::optional<std::string>& fileName = std::nullopt);
+std::pair<std::string, PathInfo> getFile(storepaths::Files fileType, const std::string& appName, const std::optional<std::string>& fileName = std::nullopt,
+                                         const std::string& extension = "json");
 ```
 `Folders` and `Files` are enums:
 ```c++
@@ -46,11 +48,13 @@ enum Folders {
     CACHE_FOLDER
 };
 enum Files {
-    JSON_CONFIG_FILE
+    COMMON_CONFIG_FILE,
+    PLATFORM_CONFIG_FILE
 };
 ```
 and are not available in C just like the previous two functions.
 The behaviour of those function is as you would expect.
+The `extension` argument of `getFile` is only used when `fileType` is `COMMON_CONFIG_FILE`.
 
 ### C
 Those are the equivalent functions in C:
@@ -58,7 +62,8 @@ Those are the equivalent functions in C:
 PathInfo getConfigFolder(char* outBuffer, size_t maxLength, const char* appName);
 PathInfo getDataFolder(char* outBuffer, size_t maxLength, const char* appName);
 PathInfo getCacheFolder(char* outBuffer, size_t maxLength, const char* appName);
-PathInfo getJSONConfigFile(char* outBuffer, size_t maxLength, const char* appName, const char* fileName);
+PathInfo getCommonConfigFile(char* outBuffer, size_t maxLength, const char* appName, const char* fileName,
+                             const char* extension);
 PathInfo GET_PLATFORM_CONFIG_FILE(char* outBuffer, size_t maxLength, const char* appName, const char* fileName);
 ```
 As in C++, the `GET_PLATFORM_CONFIG_FILE` function get its name depending on the platform.
@@ -86,9 +91,11 @@ The _folder functions_ (`getConfigFolder`, `getDataFolder`, ...) create the fold
 The _file functions_ create the folder they are in, but the file in question is not created.
 
 With _file functions_, the `appName` is the folder name within the file is placed (often the configuration folder).
-If you specify `fileName`, the configuration file will be named after this variable. If not `appName` will be used. E.g. (C++):
-- `storepaths::getJSONConfigFile("Snake Game")` => `.../Snake Game/Snake Game.json`
-- `storepaths::getJSONConfigFile("Snake Game", "configuration")` => `.../Snake Game/configuration.json`
+If you specify `fileName`, the configuration file will be named after this variable. If not `appName` will be used. E.g. (C++)
+The extension with `getCommonConfigFile` is the file extension of the file created:
+- `storepaths::getCommonConfigFile("Snake Game")` => `.../Snake Game/Snake Game.json`
+- `storepaths::getCommonConfigFile("Snake Game", "configuration")` => `.../Snake Game/configuration.json`
+- `storepaths::getCommonConfigFile("Snake Game", "configuration", "yml")` => `.../Snake Game/configuration.yml`
 
 Every function you can call from this library returns an absolute path.
 **Different functions may return the same path, so do not use the same file name for a _data file_ and a _config file_ for example.**
@@ -178,17 +185,17 @@ To summarize:
 
 #### Function aliases
 
-| C++ Function name                    | Platform   | Aliased to                                    | With posix implementation for macOS                    |
-|--------------------------------------|------------|-----------------------------------------------|--------------------------------------------------------|
-| `storepaths::getConfigFolder`        | Linux      | `storepaths::posix::getConfigFolder`          | Does nothing                                           |
-| `storepaths::getConfigFolder`        | Windows    | `storepaths::windows::getConfigFolder`        | Does nothing                                           |
-| `storepaths::getConfigFolder`        | macOS      | `storepaths::osx::getConfigFolder`            | `storepaths::posix::getConfigFolder`                   |
-| `storepaths::getDataFolder`          | Linux      | `storepaths::posix::getDataFolder`            | Does nothing                                           |
-| ...                                  | ...        | ...                                           | ...                                                    |
-| `storepaths::getJSONConfigFile`      | macOS      | `storepaths::osx::getJSONConfigFile`          | `storepaths::posix::getJSONConfigFile`                 |
-| `storepaths::getPosixConfigFile`     | Linux      | `storepaths::posix::getPosixConfigFile`       | Does nothing                                           |
-| `storepaths::getWindowsConfigFile`   | Windows    | `storepaths::windows::getWindowsConfigFile`   | Does nothing                                           |
-| `storepaths::getOsxConfigFile`       | macOS      | `storepaths::osx::getOsxConfigFile`           | Still aliased to `storepaths::osx::getOsxConfigFile`   |
+| C++ Function name                  | Platform   | Aliased to                                  | With posix implementation for macOS                  |
+|------------------------------------|------------|---------------------------------------------|------------------------------------------------------|
+| `storepaths::getConfigFolder`      | Linux      | `storepaths::posix::getConfigFolder`        | Does nothing                                         |
+| `storepaths::getConfigFolder`      | Windows    | `storepaths::windows::getConfigFolder`      | Does nothing                                         |
+| `storepaths::getConfigFolder`      | macOS      | `storepaths::osx::getConfigFolder`          | `storepaths::posix::getConfigFolder`                 |
+| `storepaths::getDataFolder`        | Linux      | `storepaths::posix::getDataFolder`          | Does nothing                                         |
+| ...                                | ...        | ...                                         | ...                                                  |
+| `storepaths::getCommonConfigFile`  | macOS      | `storepaths::osx::getCommonConfigFile`      | `storepaths::posix::getCommonConfigFile`             |
+| `storepaths::getPosixConfigFile`   | Linux      | `storepaths::posix::getPosixConfigFile`     | Does nothing                                         |
+| `storepaths::getWindowsConfigFile` | Windows    | `storepaths::windows::getWindowsConfigFile` | Does nothing                                         |
+| `storepaths::getOsxConfigFile`     | macOS      | `storepaths::osx::getOsxConfigFile`         | Still aliased to `storepaths::osx::getOsxConfigFile` |
 
 | C Function name        | Platform | Aliased to               | With posix implementation for macOS |
 |------------------------|----------|--------------------------|-------------------------------------|
@@ -197,7 +204,7 @@ To summarize:
 | `getConfigFolder`      | macOS    | `getOsxConfigFolder`     | `getPosixConfigFolder`              |
 | `getDataFolder`        | Linux    | `getPosixDataFolder`     | Does nothing                        |
 | ...                    | ...      | ...                      | ...                                 |
-| `getJSONConfigFile`    | macOS    | `getOsxJSONConfigFile`   | `getPosixJSONConfigFile`            |
+| `getCommonConfigFile`  | macOS    | `getOsxCommonConfigFile` | `getPosixCommonConfigFile`          |
 | `getPosixConfigFile`   | Linux    | Is not an alias          | Does nothing                        |
 | `getWindowsConfigFile` | Windows  | Is not an alias          | Does nothing                        |
 | `getOsxConfigFile`     | macOS    | Is not an alias          | Does not change                     |
@@ -213,7 +220,7 @@ Currently, you can only get the folders corresponding to the current user. When 
 
 There is 3 folder functions for now:
 
-| C++ name                      | C name            | Posix expected result                | Windows expected result                    | Osx expected result                                  |
+| C++ name                      | C name            | Posix result                         | Windows result                             | Osx result                                           |
 |-------------------------------|-------------------|--------------------------------------|--------------------------------------------|------------------------------------------------------|
 | `storepaths::getConfigFolder` | `getConfigFolder` | `/home/bob/.config/<app name>/`      | `C:\Users\bob\AppData\Roaming\<app name>\` | `/Users/bob/Library/Application Support/<app name>/` |
 | `storepaths::getDataFolder`   | `getDataFolder`   | `/home/bob/.local/share/<app name>/` | `C:\Users\bob\AppData\Roaming\<app name>\` | `/Users/bob/Library/Application Support/<app name>/` |
@@ -222,5 +229,11 @@ There is 3 folder functions for now:
 ### File functions
 
 These functions return files. The file is not created but the folder it is in is created with the same logic as folder functions.
-- The JSON config file gives you a common and quick way to store information: it is a sure way to store information across platforms
+The folder creation is just like the folder functions. There are two functions:
+- The common config file gives you a cross-platform and quick way to store information: it is a reliable way to store information
 - The other function changes implementation based on the platform. It implements recommenced way to use config files, according to the documentation of your system.
+
+| C++ name                                | C name                          | Posix result                                           | Windows expected result                                           | Osx expected result                                                         |
+|-----------------------------------------|---------------------------------|--------------------------------------------------------|-------------------------------------------------------------------|-----------------------------------------------------------------------------|
+| `storepaths::getCommonConfigFile`       | `getCommonConfigFile`           | `/home/bob/.config/<app name>/<file name>.<extension>` | `C:\Users\bob\AppData\Roaming\<app name>\<file name>.<extension>` | `/Users/bob/Library/Application Support/<app name>/<file name>.<extension>` |
+| `storepaths::<platform>::getConfigFile` | `get<platform>CommonConfigFile` | `/home/bob/.config/<app name>/<file name>.conf`        | `C:\Users\bob\AppData\Roaming\<app name>\<file name>.ini`         | `/Users/bob/Library/Application Support/<app name>/<file name>.plist`       |

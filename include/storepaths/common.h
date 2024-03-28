@@ -54,7 +54,7 @@
 #endif
 
 // ### Common Values
-#define STOREPATHS_JSON_EXTENSION ".json"
+#define STOREPATHS_DEFAULT_CONFIG_FILE_EXTENSION "json"
 // Posix
 #define STOREPATHS_POSIX_CONFIG_EXTENSION ".conf"
 #define STOREPATHS_POSIX_DEFAULT_CONFIG_FOLDER "$HOME/.config"
@@ -105,7 +105,7 @@ namespace storepaths {
     };
 
     enum Files {
-        JSON_CONFIG_FILE,
+        COMMON_CONFIG_FILE,
         PLATFORM_CONFIG_FILE
     };
 } // storepaths

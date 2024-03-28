@@ -16,7 +16,7 @@ Available platforms:
 
 | Platform | Status    |  
 |----------|-----------|  
-| macOS    | ✅ Stable  |  
+| macOS    | ❓ Unknown |  
 | Windows  | ❓ Unknown |  
 | Linux    | ❓ Unknown |
 

@@ -117,11 +117,11 @@ namespace storepaths::windows {
 		appName << PATH_SEP_CHAR
 	)
 
-	DEFINE_GET_FILE_FUNCTION(
-		getJSONConfigFile,
+	DEFINE_GET_COMMON_FILE_FUNCTION(
+		getCommonConfigFile,
 		getSpecificFolder(result, FOLDERID_RoamingAppData), // AppData\Roaming
 		appName << PATH_SEP_CHAR,
-		fileName.value_or(appName) << STOREPATHS_JSON_EXTENSION
+		fileName.value_or(appName) << '.' << extension
 	)
 
 	DEFINE_GET_FILE_FUNCTION(

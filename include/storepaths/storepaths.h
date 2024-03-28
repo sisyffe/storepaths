@@ -13,14 +13,16 @@
     std::pair<std::string, PathInfo> getConfigFolder(const std::string& appName); \
     std::pair<std::string, PathInfo> getDataFolder(const std::string& appName); \
     std::pair<std::string, PathInfo> getCacheFolder(const std::string& appName); \
-    std::pair<std::string, PathInfo> getJSONConfigFile(const std::string& appName, \
-        const std::optional<std::string>& fileName = std::nullopt); \
+    std::pair<std::string, PathInfo> getCommonConfigFile(const std::string& appName, \
+        const std::optional<std::string>& fileName = std::nullopt, \
+        const std::optional<std::string>& extension = STOREPATHS_DEFAULT_CONFIG_FILE_EXTENSION); \
     std::pair<std::string, PathInfo> platformConfigFileName(const std::string& appName, \
         const std::optional<std::string>& fileName = std::nullopt); \
     \
     std::pair<std::string, PathInfo> getFolder(Folders folderType, const std::string& appName); \
     std::pair<std::string, PathInfo> getFile(Files fileType, const std::string& appName, \
-        const std::optional<std::string>& fileName = std::nullopt);
+        const std::optional<std::string>& fileName = std::nullopt, \
+        const std::string& extension = STOREPATHS_DEFAULT_CONFIG_FILE_EXTENSION);
 
 namespace storepaths {
 #if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
@@ -63,17 +65,18 @@ namespace storepaths {
     PathInfo configName(char* outBuffer, size_t maxLength, const char* appName); \
     PathInfo dataName(char* outBuffer, size_t maxLength, const char* appName); \
     PathInfo cacheName(char* outBuffer, size_t maxLength, const char* appName); \
-    PathInfo confFileName(char* outBuffer, size_t maxLength, const char* appName, const char* fileName); \
+    PathInfo confFileName(char* outBuffer, size_t maxLength, const char* appName, const char* fileName, \
+        const char* extension); \
     PathInfo platformConfName(char* outBuffer, size_t maxLength, const char* appName, const char* fileName);
 
 #if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
-    DECLARE_C_FUNCS(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixJSONConfigFile, getPosixConfigFile)
+    DECLARE_C_FUNCS(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixCommonConfigFile, getPosixConfigFile)
 #endif
 #if defined(STOREPATHS_OS_WINDOWS)
-    DECLARE_C_FUNCS(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsJSONConfigFile, getWindowsConfigFile)
+    DECLARE_C_FUNCS(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsCommonConfigFile, getWindowsConfigFile)
 #endif
 #if defined(STOREPATHS_OS_OSX)
-    DECLARE_C_FUNCS(getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxJSONConfigFile, getOsxConfigFile)
+    DECLARE_C_FUNCS(getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxCommonConfigFile, getOsxConfigFile)
 #endif
 
 #undef DECLARE_C_FUNCS
@@ -89,19 +92,19 @@ namespace storepaths {
     static inline PathInfo getCacheFolder(char* outBuffer, const size_t maxLength, const char* appName) { \
         return aliasCacheName(outBuffer, maxLength, appName); \
     } \
-    static inline PathInfo getJSONConfigFile(char* outBuffer, const size_t maxLength, \
-            const char* appName, const char* fileName) { \
-        return aliasConfFileName(outBuffer, maxLength, appName, fileName); \
+    static inline PathInfo getCommonConfigFile(char* outBuffer, const size_t maxLength, \
+            const char* appName, const char* fileName, const char* extension) { \
+        return aliasConfFileName(outBuffer, maxLength, appName, fileName, extension); \
     } \
     /* No alias for platform config file */
 
 // Only one can be defined
 #if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_USING_POSIX_IMPL_FOR_OSX)
-    DEFINE_C_ALIASES(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixJSONConfigFile)
+    DEFINE_C_ALIASES(getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixCommonConfigFile)
 #elif defined(STOREPATHS_OS_WINDOWS)
-    DEFINE_C_ALIASES(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsJSONConfigFile)
+    DEFINE_C_ALIASES(getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsCommonConfigFile)
 #elif defined(STOREPATHS_OS_OSX) && !defined(STOREPATHS_USING_POSIX_IMPL_FOR_OSX)
-    DEFINE_C_ALIASES(getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxJSONConfigFile)
+    DEFINE_C_ALIASES(getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxCommonConfigFile)
 #endif
 
 #undef DEFINE_C_ALIASES

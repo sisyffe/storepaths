@@ -18,10 +18,10 @@
     } \
     \
     std::pair<std::string, PathInfo> getFile(const Files fileType, const std::string &appName, \
-            const std::optional<std::string>& fileName) { \
+            const std::optional<std::string>& fileName, const std::string& extension) { \
         switch (fileType) { \
-        case JSON_CONFIG_FILE: \
-            return getJSONConfigFile(appName, fileName); \
+        case COMMON_CONFIG_FILE: \
+            return getCommonConfigFile(appName, fileName, extension); \
         case PLATFORM_CONFIG_FILE: \
             return platformConfigFileName(appName, fileName); \
         default: \
@@ -66,6 +66,22 @@ STOREPATHS_C_LINKAGE()
         return info; \
     }
 
+// The differrence is that file functions get two more parameter: fileName and extension
+#define CPP_COMMON_FILE_FUNC_WRAPPER(funcName, callbackFunc) \
+    storepaths::PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName, const char* fileName, \
+            const char* extension) { \
+        auto [string, info] = callbackFunc(appName, fileName ? std::optional{ fileName } : std::nullopt, extension); \
+        if (!info.found) { \
+            outBuffer[0] = '\0'; \
+            return { info.found, info.mkdirReturnCode, false, false }; \
+        } else if (string.size() + 1 > maxLength) { \
+            outBuffer[0] = '\0'; \
+            return { info.found, info.mkdirReturnCode, true, false }; \
+        } \
+        std::strncpy(outBuffer, string.c_str(), string.size() + 1); \
+    return info; \
+}
+
 // The differrence is that file functions get one more parameter: fileName
 #define CPP_FILE_FUNC_WRAPPER(funcName, callbackFunc) \
     storepaths::PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName, const char* fileName) { \
@@ -81,21 +97,21 @@ STOREPATHS_C_LINKAGE()
         return info; \
     }
 
-#define DEFINE_C_WRAPPERS(nameSpace, aliasConfigName, aliasDataName, aliasCacheName, aliasJSONConfFileName, aliasConfFileName) \
+#define DEFINE_C_WRAPPERS(nameSpace, aliasConfigName, aliasDataName, aliasCacheName, aliasCommonConfFileName, aliasConfFileName) \
     CPP_FOLDER_FUNC_WRAPPER(aliasConfigName, storepaths::nameSpace::getConfigFolder) \
     CPP_FOLDER_FUNC_WRAPPER(aliasDataName, storepaths::nameSpace::getDataFolder) \
     CPP_FOLDER_FUNC_WRAPPER(aliasCacheName, storepaths::nameSpace::getCacheFolder) \
-    CPP_FILE_FUNC_WRAPPER(aliasJSONConfFileName, storepaths::nameSpace::getJSONConfigFile) \
+    CPP_COMMON_FILE_FUNC_WRAPPER(aliasCommonConfFileName, storepaths::nameSpace::getCommonConfigFile) \
     CPP_FILE_FUNC_WRAPPER(aliasConfFileName, storepaths::nameSpace::aliasConfFileName)
 
 #if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
-    DEFINE_C_WRAPPERS(posix, getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixJSONConfigFile, getPosixConfigFile)
+    DEFINE_C_WRAPPERS(posix, getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixCommonConfigFile, getPosixConfigFile)
 #endif
 #if defined(STOREPATHS_OS_WINDOWS)
     DEFINE_C_WRAPPERS(windows, getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsJSONConfigFile, getWindowsConfigFile)
 #endif
 #if defined(STOREPATHS_OS_OSX)
-    DEFINE_C_WRAPPERS(osx, getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxJSONConfigFile, getOsxConfigFile)
+    DEFINE_C_WRAPPERS(osx, getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxCommonConfigFile, getOsxConfigFile)
 #endif
 
 #undef DEFINE_C_ALIASES
