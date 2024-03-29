@@ -14,11 +14,11 @@ To use this library, **there is no complicated platform-checking operations** to
 
 Available platforms:
 
-| Platform | Status    |  
-|----------|-----------|  
-| macOS    | ✅ Runs    |  
-| Windows  | ❓ Unknown |  
-| Linux    | ❓ Unknown |
+| Platform | Status     |  
+|----------|------------|  
+| macOS    | ✅ All good |  
+| Windows  | ❓ Unknown  |  
+| Linux    | ✅ All good |
 
 The library can be used both in C and C++ with the same header file.
 
