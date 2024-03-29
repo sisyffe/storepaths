@@ -108,7 +108,7 @@ STOREPATHS_C_LINKAGE
     DEFINE_C_WRAPPERS(posix, getPosixConfigFolder, getPosixDataFolder, getPosixCacheFolder, getPosixCommonConfigFile, getPosixConfigFile)
 #endif
 #if defined(STOREPATHS_OS_WINDOWS)
-    DEFINE_C_WRAPPERS(windows, getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsJSONConfigFile, getWindowsConfigFile)
+    DEFINE_C_WRAPPERS(windows, getWindowsConfigFolder, getWindowsDataFolder, getWindowsCacheFolder, getWindowsCommonConfigFile, getWindowsConfigFile)
 #endif
 #if defined(STOREPATHS_OS_OSX)
     DEFINE_C_WRAPPERS(osx, getOsxConfigFolder, getOsxDataFolder, getOsxCacheFolder, getOsxCommonConfigFile, getOsxConfigFile)

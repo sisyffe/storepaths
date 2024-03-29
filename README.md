@@ -14,11 +14,11 @@ To use this library, **there is no complicated platform-checking operations** to
 
 Available platforms:
 
-| Platform | Status     |  
-|----------|------------|  
-| macOS    | ✅ All good |  
-| Windows  | ❓ Unknown  |  
-| Linux    | ✅ All good |
+| Platform | Status         |  
+|----------|----------------|  
+| macOS    | ✅ Tests passed |  
+| Windows  | ✅ Tests passed |  
+| Linux    | ✅ Tests passed |
 
 The library can be used both in C and C++ with the same header file.
 
@@ -76,9 +76,10 @@ Every function returns an absolute path.
 The build process is fairly simple: it is a standard CMake project.
 1. Clone the project or download it
 ```sh
-git clone https://github.com/sisyffe/storepaths.gitcd storepaths
+git clone https://github.com/sisyffe/storepaths.git
+cd storepaths
 ```  
-2. Check that you have CMake installed. If the following command fails [install cmake](https://cmake.org/download/):
+2. Check that you have CMake installed. If the following command fails, [install cmake](https://cmake.org/download/):
 ```sh
 cmake --version
 ```
@@ -88,18 +89,28 @@ cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 ```
 4. Build the project. If you get any errors there, good luck ! (more seriously [post an issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/creating-an-issue))
 ```sh
-cmake --build build
+cmake --build build # "build" refers to the directory
 ```
 5. Extract the files
-- The static library is at `build/libstorepaths.a`
+- The static library is at `build/libstorepaths.a`. Donc forgot to link it to your project!
 - The include directory is at `include/storepaths`.
 
+In the `CMakeLists.txt` file, there is an option called `BUILD_SHARED_LIBS` (it build the library in `.so`/`.dll`/`.dylib` instead of `.a`/`.lib`), 
+by default, it is `OFF` but you can enable it by adding `-DBUILD_STATIC_LIBS=ON` **before** including the path.
+
 ### Other ways
-- Add it to your git repository a **submodule** and add it as a subdirectory of your project
-  Your CMakeLists.txt file:
+- Add it to your git repository a **submodule** and add it as a subdirectory of your project :
+```
+git submodule add https://github.com/sisyffe/storepaths.git
+```
+And then, in your CMakeLists.txt file:
 ```cmake
 # ...
 add_subdirectory(storepaths)
+target_include_directories(your-project PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/storepaths/include
+        # ...
+)
 target_link_libraries(your-project PRIVATE storepaths)
 # ...
 ```
