@@ -76,17 +76,19 @@
 
 // ## Use extern "C" when compiled in C++
 #ifdef __cplusplus
-#  define STOREPATHS_C_LINKAGE() \
+#  define STOREPATHS_C_LINKAGE \
       extern "C" {
-#  define STOREPATHS_C_LINKAGE_END() \
+#  define STOREPATHS_C_LINKAGE_END \
       } // extern "C"
-#  define STOREPATHS_NAMESPACE_IF_CPP() \
+#  define STOREPATHS_NAMESPACE_IF_CPP \
     namespace storepaths {
-#  define STOREPATHS_NAMESPACE_IF_CPP_END() \
+#  define STOREPATHS_NAMESPACE_IF_CPP_END \
     } // storepaths
 #else
-#  define STOREPATHS_C_LINKAGE()
-#  define STOREPATHS_C_LINKAGE_END()
+#  define STOREPATHS_C_LINKAGE
+#  define STOREPATHS_C_LINKAGE_END
+#  define STOREPATHS_NAMESPACE_IF_CPP
+#  define STOREPATHS_NAMESPACE_IF_CPP_END
 #endif
 
 // ## Other things
@@ -111,20 +113,20 @@ namespace storepaths {
 } // storepaths
 #endif // __cplusplus
 
-STOREPATHS_NAMESPACE_IF_CPP()
+STOREPATHS_NAMESPACE_IF_CPP
 typedef struct {
     bool found;
     int mkdirReturnCode;
     bool bufferTooSmall;
     bool succeeded;
 } PathInfo;
-STOREPATHS_NAMESPACE_IF_CPP_END()
+STOREPATHS_NAMESPACE_IF_CPP_END
 
 // ## System functions
-STOREPATHS_C_LINKAGE()
+STOREPATHS_C_LINKAGE
 int canAccessFolder(const char* path);
 int crossMkdir(const char* path, mode_t mode);
 int mkdirParent(const char* path, mode_t mode);
-STOREPATHS_C_LINKAGE_END()
+STOREPATHS_C_LINKAGE_END
 
 #endif //STOREPATHS_COMMON_H_

@@ -16,7 +16,7 @@ Available platforms:
 
 | Platform | Status    |  
 |----------|-----------|  
-| macOS    | ❓ Unknown |  
+| macOS    | ✅ Runs    |  
 | Windows  | ❓ Unknown |  
 | Linux    | ❓ Unknown |
 

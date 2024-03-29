@@ -10,7 +10,7 @@ using namespace storepaths;
 #  include <unistd.h> // access
 #endif
 
-STOREPATHS_C_LINKAGE()
+STOREPATHS_C_LINKAGE
 
 int canAccessFolder(const char* path) {
 #if defined(STOREPATHS_OS_LINUX) || defined(STOREPATHS_OS_OSX)
@@ -69,4 +69,4 @@ int mkdirParent(const char* path, const mode_t mode) {
     return returnCode;
 }
 
-STOREPATHS_C_LINKAGE_END()
+STOREPATHS_C_LINKAGE_END

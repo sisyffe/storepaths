@@ -50,7 +50,7 @@ namespace storepaths {
 #undef DEFINE_GET_FILE_FOLDER_FUNCS
 
 // # Proxy for C
-STOREPATHS_C_LINKAGE()
+STOREPATHS_C_LINKAGE
 
 #define CPP_FOLDER_FUNC_WRAPPER(funcName, callbackFunc) \
     storepaths::PathInfo funcName(char* outBuffer, const size_t maxLength, const char* appName) { \
@@ -118,4 +118,4 @@ STOREPATHS_C_LINKAGE()
 #undef CPP_FOLDER_FUNC_WRAPPER
 #undef CPP_FILE_FUNC_WRAPPER
 
-STOREPATHS_C_LINKAGE_END()
+STOREPATHS_C_LINKAGE_END

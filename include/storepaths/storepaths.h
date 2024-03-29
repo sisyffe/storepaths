@@ -15,7 +15,7 @@
     std::pair<std::string, PathInfo> getCacheFolder(const std::string& appName); \
     std::pair<std::string, PathInfo> getCommonConfigFile(const std::string& appName, \
         const std::optional<std::string>& fileName = std::nullopt, \
-        const std::optional<std::string>& extension = STOREPATHS_DEFAULT_CONFIG_FILE_EXTENSION); \
+        const std::string& extension = STOREPATHS_DEFAULT_CONFIG_FILE_EXTENSION); \
     std::pair<std::string, PathInfo> platformConfigFileName(const std::string& appName, \
         const std::optional<std::string>& fileName = std::nullopt); \
     \
