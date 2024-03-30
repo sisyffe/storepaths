@@ -26,19 +26,17 @@ target_include_directories(storepaths PRIVATE
 target_sources(storepaths PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src/common.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.cpp
-        ${IMPLEMENTATION_FILE}
-        ${SECOND_IMPLEMENTATION_FILE}
 )
 ### Choose implementation file(s)
 if(WIN32)
-    set(IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.windows.cpp")
-    set(SECOND_IMPLEMENTATION_FILE "")
+    target_sources(storepaths PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.windows.cpp")
 elseif(APPLE)
-    set(IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.osx.cpp")
-    set(SECOND_IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.posix.cpp")
+    target_sources(storepaths PRIVATE
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.osx.cpp"
+            "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.posix.cpp"
+    )
 elseif(UNIX)
-    set(IMPLEMENTATION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.posix.cpp")
-    set(SECOND_IMPLEMENTATION_FILE "")
+    target_sources(storepaths PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src/storepaths.impl.posix.cpp")
 else()
     message(SEND_ERROR "Unknown platform")
 endif()
